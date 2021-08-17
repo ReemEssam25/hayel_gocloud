@@ -7,10 +7,16 @@ import 'package:hayel_gocloud/models/api_services.dart';
 import 'package:hayel_gocloud/models/department.dart';
 import 'package:hayel_gocloud/widgets/departmentTable.dart';
 
+
+
+
+
+
 class departmentScreen extends StatefulWidget {
+  const departmentScreen({Key key}) : super(key: key);
+
   @override
-  // TODO: implement createState
-  State<StatefulWidget> get createState => _departmentScreenState();
+  _departmentScreenState createState() => _departmentScreenState();
 }
 
 class _departmentScreenState extends State<departmentScreen> {
