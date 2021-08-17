@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'Screens/Login_Screen.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,9 +14,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFEFEFF6),
         primarySwatch: Colors.lightGreen,
-
       ),
-      home: MyHomePage(),
+      initialRoute: '/LoginScreen', // default is '/'
+      routes: {
+        '/LoginScreen': (ctx) => LoginScreen(),
+      },
     );
   }
 }
@@ -31,23 +35,17 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<StatefulWidget> get createState => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final GlobalKey<ScaffoldState> _drawerKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-
     ListTile selectedOption;
     return Scaffold(
-      appBar: AppBar(
-        leading: Icon(Icons.circle)
-      ),
-
+      appBar: AppBar(leading: Icon(Icons.circle)),
       body: Scaffold(
         key: _drawerKey,
         drawer: Drawer(
@@ -57,83 +55,107 @@ class _MyHomePageState extends State<MyHomePage> {
               //SizedBox(height: 15,),
               ListTile(
                 title: const Text("Home"),
-                leading: Icon(Icons.home, color: Colors.black,),
-                onTap: ()
-                {
+                leading: Icon(
+                  Icons.home,
+                  color: Colors.black,
+                ),
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text("Attend By Face"),
-                leading: Icon(Icons.person, color: Colors.black,),
-                onTap: ()
-                {
+                leading: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                ),
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text("Show QR"),
-                leading: Icon(Icons.qr_code, color: Colors.black,),
-                onTap: ()
-                {
+                leading: Icon(
+                  Icons.qr_code,
+                  color: Colors.black,
+                ),
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text("Departments"),
-                leading: Icon(Icons.apartment, color: Colors.black,),
-                onTap: ()
-                {
+                leading: Icon(
+                  Icons.apartment,
+                  color: Colors.black,
+                ),
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: const Text("Employees"),
-                leading: Icon(Icons.people_alt, color: Colors.black,),
-                onTap: ()
-                {
+                leading: Icon(
+                  Icons.people_alt,
+                  color: Colors.black,
+                ),
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ExpansionTile(
-               title: const Text("Message"),
-               leading: Icon(Icons.add_alert_rounded, color: Colors.black,),
-               children: [
-                 ListTile(
-                   title: const Text("Send New Message"),
-                   leading: Icon(Icons.add_alert_rounded, color: Colors.black,),
-                   onTap: ()
-                   {
-                     Navigator.pop(context);
-                   },
-                 ),
-                 ListTile(
-                   title: const Text("All Messages"),
-                   leading: Icon(Icons.filter_frames_sharp, color: Colors.black,),
-                   onTap: ()
-                   {
-                     Navigator.pop(context);
-                   },
-                 ),
-               ],
-             ),
-              ExpansionTile(
-                title: const Text("Reports"),
-                leading: Icon(Icons.add_alert_rounded, color: Colors.black,),
+                title: const Text("Message"),
+                leading: Icon(
+                  Icons.add_alert_rounded,
+                  color: Colors.black,
+                ),
                 children: [
                   ListTile(
                     title: const Text("Send New Message"),
-                    leading: Icon(Icons.add_alert_rounded, color: Colors.black,),
-                    onTap: ()
-                    {
+                    leading: Icon(
+                      Icons.add_alert_rounded,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
                       Navigator.pop(context);
                     },
                   ),
                   ListTile(
                     title: const Text("All Messages"),
-                    leading: Icon(Icons.filter_frames_sharp, color: Colors.black,),
-                    onTap: ()
-                    {
+                    leading: Icon(
+                      Icons.filter_frames_sharp,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+              ExpansionTile(
+                title: const Text("Reports"),
+                leading: Icon(
+                  Icons.add_alert_rounded,
+                  color: Colors.black,
+                ),
+                children: [
+                  ListTile(
+                    title: const Text("Send New Message"),
+                    leading: Icon(
+                      Icons.add_alert_rounded,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("All Messages"),
+                    leading: Icon(
+                      Icons.filter_frames_sharp,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
                       Navigator.pop(context);
                     },
                   ),
@@ -144,7 +166,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
           child: Column(
-
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
@@ -153,25 +174,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Container(
                   child: IconButton(
                       icon: Icon(Icons.menu),
-                      onPressed: (){
-                        if (_drawerKey.currentState.isDrawerOpen)
-                        {
+                      onPressed: () {
+                        if (_drawerKey.currentState.isDrawerOpen) {
                           Navigator.pop(context);
-                        }
-                        else{
+                        } else {
                           _drawerKey.currentState.openDrawer();
                         }
-                      }
-                  ),
-                  decoration: BoxDecoration(border: Border.all(color: Colors.black12), borderRadius: BorderRadius.circular(5)),
+                      }),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black12),
+                      borderRadius: BorderRadius.circular(5)),
                 ),
                 color: Colors.white,
-              )
-              ,
+              ),
               Container(
                 color: Colors.blue,
               )
-
             ],
           ),
         ),
