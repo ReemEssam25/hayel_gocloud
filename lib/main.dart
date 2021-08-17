@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/Screens/department_Screen.dart';
 import 'package:hayel_gocloud/home_page.dart';
 
 import 'Screens/Login_Screen.dart';
@@ -16,9 +17,10 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color(0xFFEFEFF6),
         primarySwatch: Colors.lightGreen,
       ),
-      initialRoute: '/LoginScreen', // default is '/'
+      initialRoute: 'department_screen',
       routes: {
         '/LoginScreen': (ctx) => LoginScreen(),
+        'department_screen': (ctx) => departmentScreen(),
       },
     );
   }

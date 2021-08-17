@@ -67,12 +67,6 @@ class LoginScreen extends StatelessWidget {
                     color: Colors.green[300],
                   ),
                 ),
-                /*Image.network(
-                  "https://png.pngtree.com/png-clipart/20191121/original/pngtree-user-icon-png-image_5097430.jpg",
-                  //height: 250,
-                  //width: 250,
-                  fit: BoxFit.cover,
-                ),*/
                 SizedBox(
                   width: 250,
                   child: TextField(
@@ -86,7 +80,6 @@ class LoginScreen extends StatelessWidget {
                                 BorderRadius.all(Radius.circular(5.0))),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.green[300]),
-                          //  borderRadius: BorderRadius.all(Radius.circular(5.0))
                         )),
                     controller: EmailController,
                     onSubmitted: (_) => submitData(),
@@ -111,7 +104,6 @@ class LoginScreen extends StatelessWidget {
                                   BorderRadius.all(Radius.circular(5.0))),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.green[300]),
-                            //  borderRadius: BorderRadius.all(Radius.circular(5.0))
                           )),
                       controller: PasswordController,
                       onSubmitted: (_) => submitData(),
