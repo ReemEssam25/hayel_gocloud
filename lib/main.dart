@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/home_page.dart';
 
 import 'Screens/Login_Screen.dart';
 
@@ -26,15 +27,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   @override
   State<StatefulWidget> get createState => _MyHomePageState();
 }
@@ -44,6 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     ListTile selectedOption;
+
+    Widget selectedPage = HomePage();
     return Scaffold(
       appBar: AppBar(leading: Icon(Icons.circle)),
       body: Scaffold(
@@ -189,7 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Container(
                 color: Colors.blue,
-              )
+              ),
+              selectedPage
             ],
           ),
         ),
