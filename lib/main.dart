@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
-    ListTile selectedOption;
+    Widget selectedPage = HomePage();
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.circle)
@@ -168,10 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white,
               )
               ,
-              Container(
-                color: Colors.blue,
-              )
-
+              selectedPage
             ],
           ),
         ),
