@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/Screens/department_Screen.dart';
 
 import 'home_page.dart';
 
@@ -12,12 +13,27 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  List<Widget> selectedPage = [HomePage(), departmentScreen()];
+  int index;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    index = 0;
+  }
+
+  void SelectedPage(int i)
+  {
+    setState(() {
+      index = i;
+    });
+  }
 
   final GlobalKey<ScaffoldState> _drawerKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
 
-    Widget selectedPage = HomePage();
     return Scaffold(
       appBar: AppBar(
           leading: Icon(Icons.circle)
@@ -36,6 +52,7 @@ class _FirstPageState extends State<FirstPage> {
                 onTap: ()
                 {
                   Navigator.pop(context);
+                  SelectedPage(0);
                 },
               ),
               ListTile(
@@ -44,6 +61,7 @@ class _FirstPageState extends State<FirstPage> {
                 onTap: ()
                 {
                   Navigator.pop(context);
+                  SelectedPage(1);
                 },
               ),
               ListTile(
@@ -60,6 +78,7 @@ class _FirstPageState extends State<FirstPage> {
                 onTap: ()
                 {
                   Navigator.pop(context);
+                  SelectedPage(1);
                 },
               ),
               ListTile(
@@ -144,7 +163,7 @@ class _FirstPageState extends State<FirstPage> {
                   color: Colors.white,
                 )
                 ,
-                selectedPage
+                departmentScreen()
               ],
             ),
           ),

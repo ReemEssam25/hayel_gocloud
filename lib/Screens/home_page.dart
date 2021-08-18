@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hayel_gocloud/container_donughtChart.dart';
-import 'package:hayel_gocloud/customContainer_HomePage.dart';
+import 'package:hayel_gocloud/widgets/container_donughtChart.dart';
+import 'package:hayel_gocloud/widgets/customContainer_HomePage.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
