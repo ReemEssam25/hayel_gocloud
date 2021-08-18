@@ -29,8 +29,8 @@ class _FirstPageState extends State<FirstPage> {
       index = i;
     });
   }
-
   final GlobalKey<ScaffoldState> _drawerKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
 
@@ -40,7 +40,28 @@ class _FirstPageState extends State<FirstPage> {
       ),
 
       body: Scaffold(
-        key: _drawerKey,
+        key:_drawerKey,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading:Container(
+            margin: EdgeInsets.all(10),
+            child: Center(
+              child: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: (){
+                    if (_drawerKey.currentState.isDrawerOpen)
+                    {
+                      Navigator.pop(context);
+                    }
+                    else{
+                      _drawerKey.currentState.openDrawer();
+                    }
+                  }
+              ),
+            ),
+            decoration: BoxDecoration(border: Border.all(color: Colors.black12), borderRadius: BorderRadius.circular(5)),
+          ) ,
+        ),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -136,7 +157,13 @@ class _FirstPageState extends State<FirstPage> {
             ],
           ),
         ),
-        body:SingleChildScrollView(
+        body:SingleChildScrollView(child: selectedPage[index]),
+      ),
+    );
+  }
+}
+
+/*SingleChildScrollView(
           child: Center(
             child: Column(
 
@@ -163,12 +190,11 @@ class _FirstPageState extends State<FirstPage> {
                   color: Colors.white,
                 )
                 ,
-                departmentScreen()
+                Container(
+                  height: 10000,
+                  child: selectedPage[index],
+                )
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
+        )*/
