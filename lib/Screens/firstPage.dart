@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/Screens/department_Screen.dart';
+import 'package:hayel_gocloud/Screens/employees_page.dart';
 
 import 'home_page.dart';
 
@@ -13,7 +14,7 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  List<Widget> selectedPage = [HomePage(), departmentScreen()];
+  List<Widget> selectedPage = [HomePage(), departmentScreen(), EmployeesPage()];
   int index;
 
   @override
@@ -108,6 +109,7 @@ class _FirstPageState extends State<FirstPage> {
                 onTap: ()
                 {
                   Navigator.pop(context);
+                  SelectedPage(2);
                 },
               ),
               ExpansionTile(
