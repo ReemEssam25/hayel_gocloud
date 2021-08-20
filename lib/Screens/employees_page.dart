@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/models/employees_model.dart';
 
 class EmployeesPage extends StatefulWidget {
   const EmployeesPage({Key key}) : super(key: key);
@@ -9,6 +10,13 @@ class EmployeesPage extends StatefulWidget {
 }
 
 class _EmployeesPageState extends State<EmployeesPage> {
+
+  List<Employee> listViewItems=[Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail")];
+
+
   @override
   Widget build(BuildContext context) {
     int dropdownValue = 50;
@@ -137,12 +145,45 @@ class _EmployeesPageState extends State<EmployeesPage> {
             ),
           ),
 
-          Column(
-            children: [
-              Row(
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    dividerThickness: 0,
+                    columnSpacing: 0,
+                    dataRowHeight: 150,
+                    headingRowHeight: 70,
+                    columns: [
+                      DataColumn(label: tableField(Colors.black, "Code", 70),),
+                      DataColumn(label: tableField(Colors.black, "English \nName", 70),),
+                      DataColumn(label: tableField(Colors.black, "Arabic \nName",70),),
+                      DataColumn(label: tableField(Colors.black, "Job \nTitle", 70),),
+                      DataColumn(label: tableField(Colors.black, "Department", 70),),
+                      DataColumn(label: tableField(Colors.black, "Insurance", 70),),
+                      DataColumn(label: tableField(Colors.black, "Email", 70),),
+                      DataColumn(label: tableField(Colors.black, " ", 70),),
+                    ],
+                    rows:
+                      listViewItems.map((e) => DataRow(
+                        cells: <DataCell>[
+                          DataCell(tableField(Colors.grey, e.Code , 150),),
+                          DataCell(tableField(Colors.grey, e.EnglishName , 150),),
+                          DataCell(tableField(Colors.grey, e.ArabicName , 150),),
+                          DataCell(tableField(Colors.grey, e.JobTitle , 150),),
+                          DataCell(tableField(Colors.grey, e.Department , 150),),
+                          DataCell(tableField(Colors.grey, e.Insurance , 150),),
+                          DataCell(tableField(Colors.grey, e.Email , 150),),
+                          DataCell(tableField(Colors.black, " " , 150),),
 
-              )
-            ],
+                        ]
+                      )).toList(),
+                  ),
+                )
+              ],
+            ),
           )
 
         ],
@@ -153,19 +194,32 @@ class _EmployeesPageState extends State<EmployeesPage> {
       ),
     );
   }
-}
 
-
-class CustomTableRow extends StatelessWidget {
-  const CustomTableRow ({Key key, this.title, this.color}) : super(key: key);
-
-  final String title;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-
+  static Widget tableField(Color color , String title , double height)
+  {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.all(5),
+      height: height,
+      width: 110,
+      child: Flex(
+        direction: Axis.vertical,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontSize: 17,
+                  color: color
+              ),
+            ),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1),
+      ),
     );
   }
+
 }
