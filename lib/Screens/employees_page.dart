@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/Screens/editEmoployee_page.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
 
 class EmployeesPage extends StatefulWidget {
@@ -12,9 +13,9 @@ class EmployeesPage extends StatefulWidget {
 class _EmployeesPageState extends State<EmployeesPage> {
 
   List<Employee> listViewItems=[Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail")];
+    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projecttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail")];
 
 
   @override
@@ -176,7 +177,51 @@ class _EmployeesPageState extends State<EmployeesPage> {
                           DataCell(tableField(Colors.grey, e.Department , 150),),
                           DataCell(tableField(Colors.grey, e.Insurance , 150),),
                           DataCell(tableField(Colors.grey, e.Email , 150),),
-                          DataCell(tableField(Colors.black, " " , 150),),
+                          DataCell(Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.all(5),
+                            height: 150,
+                            width: 110,
+                            child:Wrap(
+                              direction: Axis.horizontal,
+                              children: [
+                                FlatButton(
+                                  onPressed: () async{
+                                    int index = listViewItems.indexOf(e);
+
+                                    print(index);
+
+                                    Employee newEmployee =await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => EditEmployee(employee: e,)),
+                                    );
+                                    print(newEmployee.EnglishName);
+                                    if (newEmployee!=null)
+                                      {
+                                        setState(() {
+                                          listViewItems[index] = newEmployee;
+                                          print(listViewItems[index].ArabicName);
+                                        });
+                                      }
+                                  },
+                                  child: Text("Edit" , style: TextStyle(fontSize: 17, color: Colors.white),),
+                                  color:Colors.lightBlue ,
+                                ),
+                                FlatButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      listViewItems.remove(e);
+                                    });
+                                  },
+                                  child: Icon(Icons.delete_rounded, color: Colors.white,),
+                                  color:Colors.red ,
+                                )
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1),
+                            ),
+                          )),
 
                         ]
                       )).toList(),
@@ -221,5 +266,6 @@ class _EmployeesPageState extends State<EmployeesPage> {
       ),
     );
   }
+
 
 }
