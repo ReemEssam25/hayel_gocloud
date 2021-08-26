@@ -28,12 +28,12 @@ class _EditEmployeeState extends State<EditEmployee> {
 
     if(widget.employee!=null)
       {
-        englishNameController.text=widget.employee.EnglishName;
-        arabicNameController.text = widget.employee.ArabicName;
-        jobTitleController.text = widget.employee.JobTitle;
-        departmentController.text = widget.employee.Department;
-        insuranceController.text = widget.employee.Insurance;
-        emailController.text = widget.employee.Email;
+        englishNameController.text=widget.employee.englishName;
+        arabicNameController.text = widget.employee.arabicName;
+        jobTitleController.text = widget.employee.jobTitle;
+        departmentController.text = widget.employee.departmentId.toString();
+        insuranceController.text = widget.employee.insurance;
+        emailController.text = widget.employee.email;
       }
   }
 
@@ -174,8 +174,8 @@ class _EditEmployeeState extends State<EditEmployee> {
                 child: SizedBox(
                   child: FlatButton(
                     onPressed: (){
-                      Employee e = new Employee(widget.employee.Code, widget.employee.EnglishName, widget.employee.ArabicName, widget.employee.JobTitle,
-                          widget.employee.Department, widget.employee.Insurance, widget.employee.Email);
+                      Employee e = new Employee(widget.employee.code, englishNameController.text, arabicNameController.text, jobTitleController.text,
+                          int.parse(departmentController.text), insuranceController.text, emailController.text);
                       Navigator.pop(context, e);
                     },
                     child: Text("Edit" , style: TextStyle(fontSize: 17, color: Colors.white),),

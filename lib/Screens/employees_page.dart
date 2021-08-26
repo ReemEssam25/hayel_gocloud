@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/Screens/editEmoployee_page.dart';
+import 'package:hayel_gocloud/models/api_services.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
 
 class EmployeesPage extends StatefulWidget {
@@ -12,14 +15,44 @@ class EmployeesPage extends StatefulWidget {
 
 class _EmployeesPageState extends State<EmployeesPage> {
 
-  List<Employee> listViewItems=[Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projecttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail")];
+  List<Employee> listViewItems;
+
+  getEmployee()
+  {
+    ApiServices.fetchEmployee().then((responce){
+      Iterable list = json.decode(responce.body);
+      List <Employee> employeeList = List<Employee>();
+      employeeList = list.map((e) => Employee.fromObject(e)).toList();
+
+      setState(() {
+        listViewItems = employeeList;
+      });
+    });
+  }
+
+  @override
+  /*void initState() {
+    //
+    super.initState();
+
+    getEmployee();
+
+    if (listViewItems==null)
+      {
+        listViewItems = [];
+      }
+  }*/
+
+
+  // =[Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+  //   Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+  //   Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projecttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
+  //   Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail")];
 
 
   @override
   Widget build(BuildContext context) {
+    getEmployee();
     int dropdownValue = 50;
     return Container(
       margin: EdgeInsets.all(20),
@@ -167,16 +200,27 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       DataColumn(label: tableField(Colors.black, "Email", 70),),
                       DataColumn(label: tableField(Colors.black, " ", 70),),
                     ],
-                    rows:
-                      listViewItems.map((e) => DataRow(
+                    rows:[
+                      listViewItems==null?DataRow(cells:[
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),)
+                          ]
+                      )
+                      :listViewItems.map((e) => DataRow(
                         cells: <DataCell>[
-                          DataCell(tableField(Colors.grey, e.Code , 150),),
-                          DataCell(tableField(Colors.grey, e.EnglishName , 150),),
-                          DataCell(tableField(Colors.grey, e.ArabicName , 150),),
-                          DataCell(tableField(Colors.grey, e.JobTitle , 150),),
-                          DataCell(tableField(Colors.grey, e.Department , 150),),
-                          DataCell(tableField(Colors.grey, e.Insurance , 150),),
-                          DataCell(tableField(Colors.grey, e.Email , 150),),
+                          DataCell(tableField(Colors.grey, e.code.toString() , 150),),
+                          DataCell(tableField(Colors.grey, e.englishName , 150),),
+                          DataCell(tableField(Colors.grey, e.arabicName , 150),),
+                          DataCell(tableField(Colors.grey, e.jobTitle , 150),),
+                          DataCell(tableField(Colors.grey, e.departmentId.toString() , 150),),
+                          DataCell(tableField(Colors.grey, e.insurance , 150),),
+                          DataCell(tableField(Colors.grey, e.email , 150),),
                           DataCell(Container(
                             alignment: Alignment.centerLeft,
                             padding: EdgeInsets.all(5),
@@ -195,12 +239,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                       context,
                                       MaterialPageRoute(builder: (context) => EditEmployee(employee: e,)),
                                     );
-                                    print(newEmployee.EnglishName);
+                                    print(newEmployee.englishName);
                                     if (newEmployee!=null)
                                       {
                                         setState(() {
                                           listViewItems[index] = newEmployee;
-                                          print(listViewItems[index].ArabicName);
+                                          print(listViewItems[index].arabicName);
                                         });
                                       }
                                   },
@@ -225,6 +269,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
 
                         ]
                       )).toList(),
+                    ]
                   ),
                 )
               ],
