@@ -30,25 +30,10 @@ class _EmployeesPageState extends State<EmployeesPage> {
     });
   }
 
-  @override
-  /*void initState() {
-    //
-    super.initState();
-
-    getEmployee();
-
-    if (listViewItems==null)
-      {
-        listViewItems = [];
-      }
-  }*/
-
-
-  // =[Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-  //   Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-  //   Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projecttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-  //   Employee(1, "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Projectttt manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail")];
-
+  void deleteStudent(int id)async{
+    var deleteStudent = await ApiServices.deleteEmployee(id);
+    deleteStudent == true ? Navigator.pop(context, true):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +63,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
               padding: const EdgeInsets.all(15),
               child: FlatButton(
                 padding: EdgeInsets.all(15),
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditEmployee(employee: null,)),
+                    );
+                  },
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   child: Text("Create" , style: TextStyle(color: Colors.white, fontSize: 20),),
                   color: Color(0xFF26D5F2),
@@ -253,6 +243,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                 ),
                                 FlatButton(
                                   onPressed: (){
+                                    deleteStudent(e.id);
                                     setState(() {
                                       listViewItems.remove(e);
                                     });

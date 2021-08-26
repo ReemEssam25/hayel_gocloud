@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/models/api_services.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
 
 
 class EditEmployee extends StatefulWidget {
-  final Employee employee;
+  Employee employee;
 
-  const EditEmployee({Key key, this.employee}) : super(key: key);
+  EditEmployee({Key key, this.employee}) : super(key: key);
 
   @override
   _EditEmployeeState createState() => _EditEmployeeState();
@@ -20,6 +21,12 @@ class _EditEmployeeState extends State<EditEmployee> {
   TextEditingController departmentController = TextEditingController();
   TextEditingController insuranceController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
+  void saveEmployee () async {
+    var saveResponce = await ApiServices.postEmployee(widget.employee);
+
+    saveResponce == true ? Navigator.pop(context, true):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
+  }
 
   @override
   void initState() {
@@ -174,11 +181,31 @@ class _EditEmployeeState extends State<EditEmployee> {
                 child: SizedBox(
                   child: FlatButton(
                     onPressed: (){
-                      Employee e = new Employee(widget.employee.code, englishNameController.text, arabicNameController.text, jobTitleController.text,
-                          int.parse(departmentController.text), insuranceController.text, emailController.text);
-                      Navigator.pop(context, e);
+
+                      if(widget.employee == null){
+
+                        widget.employee = new Employee(widget.employee.code,
+                            englishNameController.text,
+                            arabicNameController.text,
+                            jobTitleController.text,
+                            int.parse(departmentController.text),
+                            insuranceController.text,
+                            emailController.text);
+                        saveEmployee();
+                      }
+                      else {
+                        Employee e = new Employee(
+                            widget.employee.code,
+                            englishNameController.text,
+                            arabicNameController.text,
+                            jobTitleController.text,
+                            int.parse(departmentController.text),
+                            insuranceController.text,
+                            emailController.text);
+                        Navigator.pop(context, e);
+                      }
                     },
-                    child: Text("Edit" , style: TextStyle(fontSize: 17, color: Colors.white),),
+                    child: Text(widget.employee==null ? "Create":"Edit" , style: TextStyle(fontSize: 17, color: Colors.white),),
                     color:Colors.lightGreen ,
                   ),
                 ),
