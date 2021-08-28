@@ -39,7 +39,7 @@ class _EditEmployeeState extends State<EditEmployee> {
         arabicNameController.text = widget.employee.arabicName;
         jobTitleController.text = widget.employee.jobTitle;
         departmentController.text = widget.employee.departmentId.toString();
-        insuranceController.text = widget.employee.insurance;
+        insuranceController.text = widget.employee.insurance ? "Yes" : "No";
         emailController.text = widget.employee.email;
       }
   }
@@ -189,7 +189,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                             arabicNameController.text,
                             jobTitleController.text,
                             int.parse(departmentController.text),
-                            insuranceController.text,
+                            insuranceController.text.toLowerCase() == "yes" ? true : false,
                             emailController.text);
                         saveEmployee();
                       }
@@ -200,7 +200,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                             arabicNameController.text,
                             jobTitleController.text,
                             int.parse(departmentController.text),
-                            insuranceController.text,
+                            insuranceController.text.toLowerCase() == "yes" ? true : false,
                             emailController.text);
                         Navigator.pop(context, e);
                       }

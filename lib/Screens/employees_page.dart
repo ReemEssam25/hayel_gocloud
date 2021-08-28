@@ -63,11 +63,14 @@ class _EmployeesPageState extends State<EmployeesPage> {
               padding: const EdgeInsets.all(15),
               child: FlatButton(
                 padding: EdgeInsets.all(15),
-                  onPressed: (){
-                    Navigator.push(
+                  onPressed: () async {
+                    Employee newEmployee =await Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => EditEmployee(employee: null,)),
                     );
+                    setState(() {
+                      listViewItems.add(newEmployee);
+                    });
                   },
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   child: Text("Create" , style: TextStyle(color: Colors.white, fontSize: 20),),
@@ -209,7 +212,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                           DataCell(tableField(Colors.grey, e.arabicName , 150),),
                           DataCell(tableField(Colors.grey, e.jobTitle , 150),),
                           DataCell(tableField(Colors.grey, e.departmentId.toString() , 150),),
-                          DataCell(tableField(Colors.grey, e.insurance , 150),),
+                          DataCell(tableField(Colors.grey, e.insurance? "Yes" : "No" , 150),),
                           DataCell(tableField(Colors.grey, e.email , 150),),
                           DataCell(Container(
                             alignment: Alignment.centerLeft,

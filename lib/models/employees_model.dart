@@ -10,7 +10,7 @@ class Employee {
   String _arabicName;
   String _jobTitle;
   int _departmentid;
-  String _insurance;
+  bool _insurance;
   String _email;
 
   Employee(this._code, this._englishName, this._arabicName, this._jobTitle, this._departmentid
@@ -25,7 +25,7 @@ class Employee {
   String get arabicName => _arabicName;
   String get jobTitle => _jobTitle;
   int get departmentId => _departmentid;
-  String get insurance => _insurance;
+  bool get insurance => _insurance;
   String get email => _email;
 
   set code (int newCode)
