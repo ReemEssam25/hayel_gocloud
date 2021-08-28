@@ -1,5 +1,5 @@
 class users {
-  int _id;
+  String _id;
   String _username;
   String _email;
   String _phone;
@@ -8,7 +8,7 @@ class users {
   users.withId(
       this._id, this._EmployeName, this._phone, this._email, this._username);
 
-  int get id => _id;
+  String get id => _id;
 
   String get Employename => _EmployeName;
 
@@ -17,7 +17,7 @@ class users {
   String get phone => _phone;
   String get Email => _email;
 
-  set id(int id) => _id = id;
+  set id(String id) => _id = id;
 
   set EmployeeName(String EName) => _EmployeName = EName;
   set UserName(String UName) => _username = UName;
@@ -37,11 +37,13 @@ class users {
     return map;
   }
 
-  users.fromObject(dynamic o) {
-    this._id = o["id"];
-    this._email = o["Email"];
-    this._EmployeName = o["EmployeeName"];
-    this._phone = o["phone"];
-    this._username = o["UserName"];
+  factory users.fromJson(dynamic json) {
+    return users.withId(
+        json["id"] as String,
+        json["employeeName"] as String,
+        json["phoneNumber"] as String,
+        json["email"] as String,
+        json["name"] as String);
   }
 }
+// this._id, this._EmployeName, this._phone, this._email, this._username

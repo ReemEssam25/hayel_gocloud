@@ -1,13 +1,45 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
+//import 'dart:developer';
+//import 'dart:html';
+import 'dart:io';
 
-import 'package:hayel_gocloud/models/employees_model.dart';
 import 'package:http/http.dart' as http;
 
+import 'employees_model.dart';
+
 class ApiServices {
-  static String departmentUrl = "https://localhost:44328/api/department";
-  static Future fetchDepartmet() async {
-    return await http.get(Uri.parse(departmentUrl));
+  final departmentUrl = 'https://localhost:44328/department/GetAll';
+  final UsersUrl = 'https://localhost:44328/Account/GetAll';
+
+  Future fetchDepartmet(String token) async {
+    final response = await http.get(Uri.parse(departmentUrl), headers: {
+      HttpHeaders.authorizationHeader: 'bearer $token',
+    });
+    if (response.statusCode == 200) {
+      print(response.body.toString());
+      return response;
+    } else {
+      final responseData = json.decode(response.body);
+
+      if (responseData['error'] != null) {
+        print(responseData['error']['message'].toString());
+      }
+
+      throw Exception('Failed to load departments from API');
+    }
+  }
+
+  Future fetchUsers(String token) async {
+    final response = await http.get(Uri.parse(UsersUrl), headers: {
+      HttpHeaders.authorizationHeader: 'bearer $token',
+    });
+    if (response.statusCode == 200) {
+      print(response.body.toString());
+      return response;
+    } else {
+      throw Exception('Failed to load users from API');
+    }
   }
 
   static String employeeUrl = 'https://localhost:44328/employee/';
@@ -15,21 +47,23 @@ class ApiServices {
     return await http.get(Uri.parse(employeeUrl));
   }
 
-  static Map <String, String> header = {
-    'Content-type' : 'application/json',
-    'Accept' : 'application/json'
+  static Map<String, String> header = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json'
   };
-  static Future<bool> postEmployee (Employee employee) async{
+  static Future<bool> postEmployee(Employee employee) async {
     var myEmployee = employee.toMap();
     var employeeBody = convert.json.encode(myEmployee);
-    var res = await http.post(Uri.parse(employeeUrl), headers:header, body: employeeBody);
+    var res = await http.post(Uri.parse(employeeUrl),
+        headers: header, body: employeeBody);
 
-    return Future.value(res.statusCode == 200 ? true:false);
+    return Future.value(res.statusCode == 200 ? true : false);
   }
 
-  static Future<bool> deleteEmployee (int id) async{
-    var res = await http.delete(Uri.parse(employeeUrl+id.toString()) , headers: header);
-    return Future.value(res.statusCode == 200 ? true:false);
+  static Future<bool> deleteEmployee(int id) async {
+    var res = await http.delete(Uri.parse(employeeUrl + id.toString()),
+        headers: header);
+    return Future.value(res.statusCode == 200 ? true : false);
   }
 }
 //Creating a list to store input data;
