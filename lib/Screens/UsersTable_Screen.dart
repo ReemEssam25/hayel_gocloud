@@ -33,45 +33,11 @@ class _UsersScreenState extends State<UsersScreen> {
   submitdata() {}
   @override
   void addusers() {
-    widget._Users.clear();
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    widget._Users.add(users("hagar", "011204", "hagar.dhdh", "gogo"));
-    // widget._ListNusers = widget._Users;
     token = Provider.of<Auth>(
       context,
       listen: false,
     ).token;
-/*    widget.api.fetchUsers(token).then((response) {
+    widget.api.fetchUsers(token).then((response) {
       var usersJsonObject = jsonDecode(response.body)['data'] as List;
       List<users> UsersTempList =
           usersJsonObject.map((e) => users.fromJson(e)).toList();
@@ -79,18 +45,20 @@ class _UsersScreenState extends State<UsersScreen> {
         widget._Users = UsersTempList;
       });
       showNentries(widget.dropdownValue);
-    });*/
-    showNentries(widget.dropdownValue);
+    });
   }
 
   void showNentries(int dropdownvar) {
     List<users> temp = [];
-    for (int i = dropdownvar * (widget.tablePageNumber - 1), j = 0;
+    //widget._ListNusers = [];
+    for (int i = widget._ListNusers.length * (widget.tablePageNumber - 1),
+            j = 0;
         i < widget._Users.length && j < dropdownvar;
         j++, i++) {
       temp.add(widget._Users[i]);
     }
     setState(() {
+      print(widget.tablePageNumber + widget._ListNusers.length);
       widget._ListNusers = temp;
     });
   }
@@ -313,13 +281,16 @@ class _UsersScreenState extends State<UsersScreen> {
                                     ? 1
                                     : 0;
                                 if ((widget._Users.length /
-                                                widget.dropdownValue)
+                                                widget._ListNusers.length)
                                             .floor() +
                                         remainder >
-                                    widget.tablePageNumber)
+                                    widget.tablePageNumber) {
                                   widget.tablePageNumber++;
 
-                                showNentries(widget.dropdownValue);
+                                  showNentries(widget.dropdownValue);
+                                } else {
+                                  widget._ListNusers = [];
+                                }
                               });
                             },
                             child: Text(

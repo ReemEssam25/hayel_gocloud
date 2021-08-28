@@ -31,8 +31,6 @@ class _departmentScreenState extends State<departmentScreen> {
     final response = await http.delete(
       Uri.parse("https://localhost:44328/department/Delete/$id"),
       headers: <String, String>{
-        // "Access-Control-Allow-Origin": "*",
-        //"Access-Control-Allow-Methods": "POST, OPTIONS",
         HttpHeaders.authorizationHeader: 'bearer $token',
         "Content-Type": "application/json"
       },
@@ -74,7 +72,7 @@ class _departmentScreenState extends State<departmentScreen> {
     });
   }
 
-  reloaddepartments(String depName) async {
+  createDepartment(String depName) async {
     final response =
         await http.post(Uri.parse("https://localhost:44328/department/Insert"),
             headers: {
@@ -106,7 +104,7 @@ class _departmentScreenState extends State<departmentScreen> {
 
     return Scaffold(
         body: Container(
-      //  padding: EdgeInsets.only(top: mediaQuery.size.height * 0.1),
+      padding: EdgeInsets.all(15),
       // width: mediaQuery.size.width * 0.75,
       child: ListView(
         padding: EdgeInsets.only(top: mediaQuery.size.height * 0.1),
@@ -171,7 +169,7 @@ class _departmentScreenState extends State<departmentScreen> {
                                 borderSide: BorderSide(color: Colors.green),
                                 onPressed: () {
                                   setState(() {
-                                    reloaddepartments(
+                                    createDepartment(
                                         departmentsController.text);
                                   });
                                 },

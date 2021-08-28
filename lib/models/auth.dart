@@ -52,7 +52,7 @@ class Auth with ChangeNotifier {
       _token = responseData['token'];
       _expiryDate = DateTime.parse(responseData['expiration']);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => UsersScreen()));
+          context, MaterialPageRoute(builder: (context) => departmentScreen()));
     }
     return response.statusCode;
   }

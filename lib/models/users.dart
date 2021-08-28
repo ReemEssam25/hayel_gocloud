@@ -37,13 +37,6 @@ class users {
     return map;
   }
 
-  users.fromObject(dynamic o) {
-    this._id = o["id"];
-    this._email = o["Email"];
-    this._EmployeName = o["EmployeeName"];
-    this._phone = o["phone"];
-    this._username = o["UserName"];
-  }
   factory users.fromJson(dynamic json) {
     return users.withId(
         json["id"] as String,

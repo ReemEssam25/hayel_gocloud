@@ -1,10 +1,12 @@
-//import 'dart:convert' as convert;
+import 'dart:convert' as convert;
 import 'dart:convert';
 //import 'dart:developer';
 //import 'dart:html';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+
+import 'employees_model.dart';
 
 class ApiServices {
   final departmentUrl = 'https://localhost:44328/department/GetAll';
@@ -39,5 +41,30 @@ class ApiServices {
       throw Exception('Failed to load users from API');
     }
   }
+
+  static String employeeUrl = 'https://localhost:44328/employee/';
+  static Future fetchEmployee() async {
+    return await http.get(Uri.parse(employeeUrl));
+  }
+
+  static Map<String, String> header = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json'
+  };
+  static Future<bool> postEmployee(Employee employee) async {
+    var myEmployee = employee.toMap();
+    var employeeBody = convert.json.encode(myEmployee);
+    var res = await http.post(Uri.parse(employeeUrl),
+        headers: header, body: employeeBody);
+
+    return Future.value(res.statusCode == 200 ? true : false);
+  }
+
+  static Future<bool> deleteEmployee(int id) async {
+    var res = await http.delete(Uri.parse(employeeUrl + id.toString()),
+        headers: header);
+    return Future.value(res.statusCode == 200 ? true : false);
+  }
 }
 //Creating a list to store input data;
+ 
