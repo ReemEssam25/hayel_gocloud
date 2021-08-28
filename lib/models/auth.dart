@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hayel_gocloud/Screens/UsersTable_Screen.dart';
 import 'package:hayel_gocloud/Screens/department_Screen.dart';
+import 'package:hayel_gocloud/Screens/firstPage.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -52,7 +53,7 @@ class Auth with ChangeNotifier {
       _token = responseData['token'];
       _expiryDate = DateTime.parse(responseData['expiration']);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => departmentScreen()));
+          context, MaterialPageRoute(builder: (context) =>FirstPage()));
     }
     return response.statusCode;
   }

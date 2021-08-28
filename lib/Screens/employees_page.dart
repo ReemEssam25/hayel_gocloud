@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/Screens/editEmoployee_page.dart';
 import 'package:hayel_gocloud/models/api_services.dart';
+import 'package:hayel_gocloud/models/auth.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
+import 'package:provider/provider.dart';
 
 class EmployeesPage extends StatefulWidget {
-  const EmployeesPage({Key key}) : super(key: key);
+  ApiServices api = new ApiServices();
 
   @override
   _EmployeesPageState createState() => _EmployeesPageState();
@@ -15,11 +17,16 @@ class EmployeesPage extends StatefulWidget {
 
 class _EmployeesPageState extends State<EmployeesPage> {
 
+  String token;
   List<Employee> listViewItems;
 
   getEmployee()
   {
-    ApiServices.fetchEmployee().then((responce){
+    token = Provider.of<Auth>(
+      context,
+      listen: false,
+    ).token;
+      widget.api.fetchEmployee(token).then((responce){
       Iterable list = json.decode(responce.body);
       List <Employee> employeeList = List<Employee>();
       employeeList = list.map((e) => Employee.fromObject(e)).toList();
@@ -31,7 +38,11 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   void deleteStudent(int id)async{
-    var deleteStudent = await ApiServices.deleteEmployee(id);
+    token = Provider.of<Auth>(
+      context,
+      listen: false,
+    ).token;
+    var deleteStudent = await ApiServices.deleteEmployee(id, token);
     deleteStudent == true ? Navigator.pop(context, true):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
   }
 

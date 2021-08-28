@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/Screens/UsersTable_Screen.dart';
 import 'package:hayel_gocloud/Screens/employees_page.dart';
 
+import 'department_Screen.dart';
 import 'home_page.dart';
 
 class FirstPage extends StatefulWidget {
@@ -14,7 +15,7 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  List<Widget> selectedPage = [HomePage(),  EmployeesPage(),UsersScreen()];
+  List<Widget> selectedPage = [HomePage(),  EmployeesPage(),UsersScreen() , departmentScreen() ];
   int index;
 
   @override
@@ -83,7 +84,10 @@ class _FirstPageState extends State<FirstPage> {
                 onTap: ()
                 {
                   Navigator.pop(context);
-                  SelectedPage(2);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UsersScreen()),
+                  );
                 },
               ),
               ListTile(
@@ -100,7 +104,7 @@ class _FirstPageState extends State<FirstPage> {
                 onTap: ()
                 {
                   Navigator.pop(context);
-                  SelectedPage(1);
+                  SelectedPage(3);
                 },
               ),
               ListTile(
@@ -164,39 +168,3 @@ class _FirstPageState extends State<FirstPage> {
     );
   }
 }
-
-/*SingleChildScrollView(
-          child: Center(
-            child: Column(
-
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    child: IconButton(
-                        icon: Icon(Icons.menu),
-                        onPressed: (){
-                          if (_drawerKey.currentState.isDrawerOpen)
-                          {
-                            Navigator.pop(context);
-                          }
-                          else{
-                            _drawerKey.currentState.openDrawer();
-                          }
-                        }
-                    ),
-                    decoration: BoxDecoration(border: Border.all(color: Colors.black12), borderRadius: BorderRadius.circular(5)),
-                  ),
-                  color: Colors.white,
-                )
-                ,
-                Container(
-                  height: 10000,
-                  child: selectedPage[index],
-                )
-              ],
-            ),
-          ),
-        )*/

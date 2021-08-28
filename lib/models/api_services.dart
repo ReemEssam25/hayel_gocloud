@@ -43,8 +43,24 @@ class ApiServices {
   }
 
   static String employeeUrl = 'https://localhost:44328/employee/';
-  static Future fetchEmployee() async {
-    return await http.get(Uri.parse(employeeUrl));
+
+
+  Future fetchEmployee(String token) async {
+    final response = await http.get(Uri.parse(employeeUrl+"GetAll"), headers: {
+      HttpHeaders.authorizationHeader: 'bearer $token',
+    });
+    if (response.statusCode == 200) {
+      print(response.body.toString());
+      return response;
+    } else {
+      final responseData = json.decode(response.body);
+
+      if (responseData['error'] != null) {
+        print(responseData['error']['message'].toString());
+      }
+
+      throw Exception('Failed to load departments from API');
+    }
   }
 
   static Map<String, String> header = {
@@ -60,9 +76,13 @@ class ApiServices {
     return Future.value(res.statusCode == 200 ? true : false);
   }
 
-  static Future<bool> deleteEmployee(int id) async {
-    var res = await http.delete(Uri.parse(employeeUrl + id.toString()),
-        headers: header);
+  static Future<bool> deleteEmployee(int id, String token) async {
+    var res = await http.delete(Uri.parse(employeeUrl+"Delete/" + id.toString()),
+      headers: <String, String>{
+        HttpHeaders.authorizationHeader: 'bearer $token',
+        "Content-Type": "application/json"
+      },
+    );
     return Future.value(res.statusCode == 200 ? true : false);
   }
 }

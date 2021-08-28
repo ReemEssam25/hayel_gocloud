@@ -102,11 +102,12 @@ class _departmentScreenState extends State<departmentScreen> {
     final departmentsController = TextEditingController();
     bool pressed = false;
 
-    return Scaffold(
-        body: Container(
+    return Container(
       padding: EdgeInsets.all(15),
       // width: mediaQuery.size.width * 0.75,
       child: ListView(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
         padding: EdgeInsets.only(top: mediaQuery.size.height * 0.1),
         children: <Widget>[
           Container(
@@ -284,6 +285,6 @@ class _departmentScreenState extends State<departmentScreen> {
               ))
         ],
       ),
-    ));
+    );
   }
 }
