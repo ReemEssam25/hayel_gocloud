@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hayel_gocloud/Screens/editEmoployee_page.dart';
+import 'package:hayel_gocloud/models/api_services.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
 
 class EmployeesPage extends StatefulWidget {
@@ -11,14 +15,29 @@ class EmployeesPage extends StatefulWidget {
 
 class _EmployeesPageState extends State<EmployeesPage> {
 
-  List<Employee> listViewItems=[Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail"),
-    Employee("1", "Dr.Mustafa Al-Shobaki", "د/مصطفي الشوبكي", "Project manager- مدير المشروعات", "Web Development", "No", "dr.mustafaelshobaky@gmail")];
+  List<Employee> listViewItems;
 
+  getEmployee()
+  {
+    ApiServices.fetchEmployee().then((responce){
+      Iterable list = json.decode(responce.body);
+      List <Employee> employeeList = List<Employee>();
+      employeeList = list.map((e) => Employee.fromObject(e)).toList();
+
+      setState(() {
+        listViewItems = employeeList;
+      });
+    });
+  }
+
+  void deleteStudent(int id)async{
+    var deleteStudent = await ApiServices.deleteEmployee(id);
+    deleteStudent == true ? Navigator.pop(context, true):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
+  }
 
   @override
   Widget build(BuildContext context) {
+    getEmployee();
     int dropdownValue = 50;
     return Container(
       margin: EdgeInsets.all(20),
@@ -44,7 +63,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
               padding: const EdgeInsets.all(15),
               child: FlatButton(
                 padding: EdgeInsets.all(15),
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditEmployee(employee: null,)),
+                    );
+                  },
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   child: Text("Create" , style: TextStyle(color: Colors.white, fontSize: 20),),
                   color: Color(0xFF26D5F2),
@@ -166,20 +190,77 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       DataColumn(label: tableField(Colors.black, "Email", 70),),
                       DataColumn(label: tableField(Colors.black, " ", 70),),
                     ],
-                    rows:
-                      listViewItems.map((e) => DataRow(
+                    rows:[
+                      listViewItems==null?DataRow(cells:[
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),),
+                            DataCell(tableField(Colors.grey, "" , 150),)
+                          ]
+                      )
+                      :listViewItems.map((e) => DataRow(
                         cells: <DataCell>[
-                          DataCell(tableField(Colors.grey, e.Code , 150),),
-                          DataCell(tableField(Colors.grey, e.EnglishName , 150),),
-                          DataCell(tableField(Colors.grey, e.ArabicName , 150),),
-                          DataCell(tableField(Colors.grey, e.JobTitle , 150),),
-                          DataCell(tableField(Colors.grey, e.Department , 150),),
-                          DataCell(tableField(Colors.grey, e.Insurance , 150),),
-                          DataCell(tableField(Colors.grey, e.Email , 150),),
-                          DataCell(tableField(Colors.black, " " , 150),),
+                          DataCell(tableField(Colors.grey, e.code.toString() , 150),),
+                          DataCell(tableField(Colors.grey, e.englishName , 150),),
+                          DataCell(tableField(Colors.grey, e.arabicName , 150),),
+                          DataCell(tableField(Colors.grey, e.jobTitle , 150),),
+                          DataCell(tableField(Colors.grey, e.departmentId.toString() , 150),),
+                          DataCell(tableField(Colors.grey, e.insurance , 150),),
+                          DataCell(tableField(Colors.grey, e.email , 150),),
+                          DataCell(Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.all(5),
+                            height: 150,
+                            width: 110,
+                            child:Wrap(
+                              direction: Axis.horizontal,
+                              children: [
+                                FlatButton(
+                                  onPressed: () async{
+                                    int index = listViewItems.indexOf(e);
+
+                                    print(index);
+
+                                    Employee newEmployee =await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => EditEmployee(employee: e,)),
+                                    );
+                                    print(newEmployee.englishName);
+                                    if (newEmployee!=null)
+                                      {
+                                        setState(() {
+                                          listViewItems[index] = newEmployee;
+                                          print(listViewItems[index].arabicName);
+                                        });
+                                      }
+                                  },
+                                  child: Text("Edit" , style: TextStyle(fontSize: 17, color: Colors.white),),
+                                  color:Colors.lightBlue ,
+                                ),
+                                FlatButton(
+                                  onPressed: (){
+                                    deleteStudent(e.id);
+                                    setState(() {
+                                      listViewItems.remove(e);
+                                    });
+                                  },
+                                  child: Icon(Icons.delete_rounded, color: Colors.white,),
+                                  color:Colors.red ,
+                                )
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1),
+                            ),
+                          )),
 
                         ]
                       )).toList(),
+                    ]
                   ),
                 )
               ],
@@ -221,5 +302,6 @@ class _EmployeesPageState extends State<EmployeesPage> {
       ),
     );
   }
+
 
 }
