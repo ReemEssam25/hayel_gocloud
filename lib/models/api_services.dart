@@ -67,14 +67,20 @@ class ApiServices {
     'Content-type': 'application/json',
     'Accept': 'application/json'
   };
-  static Future<bool> postEmployee(Employee employee) async {
+  static Future<bool> postEmployee(Employee employee, String token) async {
     var myEmployee = employee.toMap();
     var employeeBody = convert.json.encode(myEmployee);
-    var res = await http.post(Uri.parse(employeeUrl),
-        headers: header, body: employeeBody);
+    var res = await http.post(Uri.parse(employeeUrl+"Insert"),
+        headers: {
+          // "Access-Control-Allow-Origin": "*",
+          //"Access-Control-Allow-Methods": "POST, OPTIONS",
+          HttpHeaders.authorizationHeader: 'bearer $token',
+          "Content-Type": "application/json"
+        }, body: employeeBody);
 
     return Future.value(res.statusCode == 200 ? true : false);
   }
+
 
   static Future<bool> deleteEmployee(int id, String token) async {
     var res = await http.delete(Uri.parse(employeeUrl+"Delete/" + id.toString()),

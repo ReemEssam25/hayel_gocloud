@@ -20,16 +20,16 @@ class _EmployeesPageState extends State<EmployeesPage> {
   String token;
   List<Employee> listViewItems;
 
-  getEmployee()
-  {
+
+  getEmployee() {
     token = Provider.of<Auth>(
       context,
       listen: false,
     ).token;
       widget.api.fetchEmployee(token).then((responce){
-      Iterable list = json.decode(responce.body);
-      List <Employee> employeeList = List<Employee>();
-      employeeList = list.map((e) => Employee.fromObject(e)).toList();
+        var EmployeeJsonObject = jsonDecode(responce.body)['data'] as List;
+        List <Employee> employeeList = List<Employee>();
+        employeeList = EmployeeJsonObject.map((e) => Employee.fromJson(e)).toList();
 
       setState(() {
         listViewItems = employeeList;
@@ -47,8 +47,14 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
     getEmployee();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     int dropdownValue = 50;
     return Container(
       margin: EdgeInsets.all(20),

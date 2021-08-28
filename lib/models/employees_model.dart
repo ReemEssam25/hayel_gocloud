@@ -92,4 +92,17 @@ class Employee {
     this.email = o["Email"];
   }
 
+  factory Employee.fromJson(dynamic json) {
+    return Employee.withId(
+        json["id"] as int,
+        json["Code"] as int,
+        json["EnglishName"] as String,
+        json["ArabicName"] as String,
+        json["JobTitle"] as String,
+        json["DepartmentId"] as int,
+        json["Insurance"] as bool,
+        json["Email"] as String,
+        );
+  }
+
 }

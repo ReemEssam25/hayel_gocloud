@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/models/api_services.dart';
+import 'package:hayel_gocloud/models/auth.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
+import 'package:provider/provider.dart';
 
 
 class EditEmployee extends StatefulWidget {
@@ -23,9 +25,13 @@ class _EditEmployeeState extends State<EditEmployee> {
   TextEditingController emailController = TextEditingController();
 
   void saveEmployee () async {
-    var saveResponce = await ApiServices.postEmployee(widget.employee);
+    String token = Provider.of<Auth>(
+      context,
+      listen: false,
+    ).token;
+    var saveResponce = await ApiServices.postEmployee(widget.employee, token);
 
-    saveResponce == true ? Navigator.pop(context, true):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
+    saveResponce == true ? Navigator.pop(context, widget.employee):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
   }
 
   @override
@@ -184,7 +190,7 @@ class _EditEmployeeState extends State<EditEmployee> {
 
                       if(widget.employee == null){
 
-                        widget.employee = new Employee(widget.employee.code,
+                        widget.employee = new Employee(1,
                             englishNameController.text,
                             arabicNameController.text,
                             jobTitleController.text,
