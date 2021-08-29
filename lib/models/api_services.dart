@@ -81,6 +81,10 @@ class ApiServices {
     return Future.value(res.statusCode == 200 ? true : false);
   }
 
+  // Future<Employee> updateEmployee(Employee e) async {
+  //   final response = await http.put(Uri.parse(employeeUrl+"Update/");
+  //
+  // }
 
   static Future<bool> deleteEmployee(int id, String token) async {
     var res = await http.delete(Uri.parse(employeeUrl+"Delete/" + id.toString()),

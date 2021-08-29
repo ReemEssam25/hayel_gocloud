@@ -34,6 +34,8 @@ class _EditEmployeeState extends State<EditEmployee> {
     saveResponce == true ? Navigator.pop(context, widget.employee):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
   }
 
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -195,8 +197,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                             arabicNameController.text,
                             jobTitleController.text,
                             int.parse(departmentController.text),
-                            insuranceController.text.toLowerCase() == "yes" ? true : false,
-                            emailController.text);
+                            emailController.text,insuranceController.text.toLowerCase() == "yes" ? true : false);
                         saveEmployee();
                       }
                       else {
@@ -206,8 +207,8 @@ class _EditEmployeeState extends State<EditEmployee> {
                             arabicNameController.text,
                             jobTitleController.text,
                             int.parse(departmentController.text),
-                            insuranceController.text.toLowerCase() == "yes" ? true : false,
-                            emailController.text);
+                            emailController.text,
+                            insuranceController.text.toLowerCase() == "yes" ? true : false);
                         Navigator.pop(context, e);
                       }
                     },

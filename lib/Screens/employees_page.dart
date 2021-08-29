@@ -18,7 +18,7 @@ class EmployeesPage extends StatefulWidget {
 class _EmployeesPageState extends State<EmployeesPage> {
 
   String token;
-  List<Employee> listViewItems;
+  List<Employee> listViewItems = new List<Employee>();
 
 
   getEmployee() {
@@ -28,11 +28,13 @@ class _EmployeesPageState extends State<EmployeesPage> {
     ).token;
       widget.api.fetchEmployee(token).then((responce){
         var EmployeeJsonObject = jsonDecode(responce.body)['data'] as List;
-        List <Employee> employeeList = List<Employee>();
-        employeeList = EmployeeJsonObject.map((e) => Employee.fromJson(e)).toList();
+        List <Employee> employeeList= EmployeeJsonObject.map((e) => Employee.fromJson(e)).toList();
 
       setState(() {
-        listViewItems = employeeList;
+        for (int i = 0 ; i < employeeList.length;i++)
+          {
+            listViewItems.add(employeeList[i]);
+          }
       });
     });
   }
@@ -210,8 +212,9 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       DataColumn(label: tableField(Colors.black, "Email", 70),),
                       DataColumn(label: tableField(Colors.black, " ", 70),),
                     ],
-                    rows:[
-                      listViewItems==null?DataRow(cells:[
+                    rows:listViewItems==null?
+                    [
+                      DataRow(cells:[
                             DataCell(tableField(Colors.grey, "" , 150),),
                             DataCell(tableField(Colors.grey, "" , 150),),
                             DataCell(tableField(Colors.grey, "" , 150),),
@@ -221,16 +224,17 @@ class _EmployeesPageState extends State<EmployeesPage> {
                             DataCell(tableField(Colors.grey, "" , 150),),
                             DataCell(tableField(Colors.grey, "" , 150),)
                           ]
-                      )
-                      :listViewItems.map((e) => DataRow(
+                      )]
+                      :
+                      listViewItems.map((e) => DataRow(
                         cells: <DataCell>[
-                          DataCell(tableField(Colors.grey, e.code.toString() , 150),),
-                          DataCell(tableField(Colors.grey, e.englishName , 150),),
-                          DataCell(tableField(Colors.grey, e.arabicName , 150),),
-                          DataCell(tableField(Colors.grey, e.jobTitle , 150),),
-                          DataCell(tableField(Colors.grey, e.departmentId.toString() , 150),),
-                          DataCell(tableField(Colors.grey, e.insurance? "Yes" : "No" , 150),),
-                          DataCell(tableField(Colors.grey, e.email , 150),),
+                          DataCell(tableField(Colors.grey, e.code.toString()??" " , 150),),
+                          DataCell(tableField(Colors.grey, e.englishName??" " , 150),),
+                          DataCell(tableField(Colors.grey, e.arabicName??" " , 150),),
+                          DataCell(tableField(Colors.grey, e.jobTitle??" " , 150),),
+                          DataCell(tableField(Colors.grey, e.departmentId.toString()??" " , 150),),
+                          DataCell(tableField(Colors.grey,  "Yes" , 150),),
+                          DataCell(tableField(Colors.grey, e.email??" " , 150),),
                           DataCell(Container(
                             alignment: Alignment.centerLeft,
                             padding: EdgeInsets.all(5),
@@ -280,7 +284,6 @@ class _EmployeesPageState extends State<EmployeesPage> {
 
                         ]
                       )).toList(),
-                    ]
                   ),
                 )
               ],

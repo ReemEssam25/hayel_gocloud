@@ -12,11 +12,12 @@ class Employee {
   int _departmentid;
   bool _insurance;
   String _email;
+  dynamic department;
 
-  Employee(this._code, this._englishName, this._arabicName, this._jobTitle, this._departmentid
-      , this._insurance, this._email);
+  Employee(this._code, this._englishName, this._arabicName, this._jobTitle, this._departmentid , this._email
+      , this._insurance);
   Employee.withId(this._id,this._code, this._englishName, this._arabicName, this._jobTitle, this._departmentid
-  , this._insurance, this._email);
+      , this.department,this._email, this._insurance);
 
 
   int get id=>_id;
@@ -95,14 +96,26 @@ class Employee {
   factory Employee.fromJson(dynamic json) {
     return Employee.withId(
         json["id"] as int,
-        json["Code"] as int,
-        json["EnglishName"] as String,
-        json["ArabicName"] as String,
-        json["JobTitle"] as String,
-        json["DepartmentId"] as int,
-        json["Insurance"] as bool,
-        json["Email"] as String,
+        json["code"] as int,
+        json["englishName"] as String,
+        json["arabicName"] as String,
+        json["jobTitle"] as String,
+        json["departmentId"] as int,
+        json["department"] as dynamic,
+        json["email"] as String,
+        json["insurance"] as bool,
         );
   }
+
+
+  /* factory users.fromJson(dynamic json) {
+    return users.withId(
+        json["id"] as String,
+        json["employeeName"] as String,
+        json["phoneNumber"] as String,
+        json["email"] as String,
+        json["name"] as String);
+  }
+}*/
 
 }
