@@ -23,6 +23,8 @@ class _EditEmployeeState extends State<EditEmployee> {
   TextEditingController departmentController = TextEditingController();
   TextEditingController insuranceController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  Future<Employee> _futureEmployee;
+
 
   void saveEmployee () async {
     String token = Provider.of<Auth>(
@@ -35,6 +37,17 @@ class _EditEmployeeState extends State<EditEmployee> {
   }
 
 
+  void updateEmployee (Employee e) async{
+    String token = Provider.of<Auth>(
+      context,
+      listen: false,
+    ).token;
+
+    _futureEmployee = (await ApiServices.updateEmployee(e, token)) as Future<Employee>;
+
+    print (_futureEmployee.toString());
+
+  }
 
   @override
   void initState() {
@@ -201,14 +214,17 @@ class _EditEmployeeState extends State<EditEmployee> {
                         saveEmployee();
                       }
                       else {
-                        Employee e = new Employee(
+                        Employee e = new Employee.withId(
+                            widget.employee.id,
                             widget.employee.code,
                             englishNameController.text,
                             arabicNameController.text,
                             jobTitleController.text,
                             int.parse(departmentController.text),
+                            widget.employee.department,
                             emailController.text,
                             insuranceController.text.toLowerCase() == "yes" ? true : false);
+                            updateEmployee(e);
                         Navigator.pop(context, e);
                       }
                     },

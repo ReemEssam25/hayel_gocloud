@@ -81,10 +81,25 @@ class ApiServices {
     return Future.value(res.statusCode == 200 ? true : false);
   }
 
-  // Future<Employee> updateEmployee(Employee e) async {
-  //   final response = await http.put(Uri.parse(employeeUrl+"Update/");
-  //
-  // }
+  static Future<Employee> updateEmployee(Employee e, String token) async {
+    var myEmployee = e.toMap();
+    var employeeBody = convert.json.encode(myEmployee);
+    final res = await http.put(Uri.parse(employeeUrl+"Update/"),
+      headers: <String, String>{
+        HttpHeaders.authorizationHeader: 'bearer $token',
+        "Content-Type": "application/json"
+      },
+      body: employeeBody
+    );
+
+    if (res.statusCode==200)
+      {
+        return Employee.fromJson(jsonDecode(res.body));
+      }
+    else {
+      throw Exception('Faild to update an employee');
+    }
+  }
 
   static Future<bool> deleteEmployee(int id, String token) async {
     var res = await http.delete(Uri.parse(employeeUrl+"Delete/" + id.toString()),
