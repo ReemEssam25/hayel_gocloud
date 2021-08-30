@@ -84,10 +84,7 @@ class _FirstPageState extends State<FirstPage> {
                 onTap: ()
                 {
                   Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UsersScreen()),
-                  );
+
                 },
               ),
               ListTile(
@@ -140,19 +137,27 @@ class _FirstPageState extends State<FirstPage> {
               ),
               ExpansionTile(
                 title: const Text("Reports"),
-                leading: Icon(Icons.add_alert_rounded, color: Colors.black,),
+                leading: Icon(CupertinoIcons.square_list, color: Colors.black,),
                 children: [
                   ListTile(
-                    title: const Text("Send New Message"),
-                    leading: Icon(Icons.add_alert_rounded, color: Colors.black,),
+                    title: const Text("By Employee"),
+                    leading: Icon(Icons.assignment_rounded, color: Colors.black,),
                     onTap: ()
                     {
                       Navigator.pop(context);
                     },
                   ),
                   ListTile(
-                    title: const Text("All Messages"),
-                    leading: Icon(Icons.filter_frames_sharp, color: Colors.black,),
+                    title: const Text("By Employee & Day"),
+                    leading: Icon(Icons.assignment_rounded, color: Colors.black,),
+                    onTap: ()
+                    {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("Time Sheet"),
+                    leading: Icon(Icons.send, color: Colors.black,),
                     onTap: ()
                     {
                       Navigator.pop(context);
@@ -160,6 +165,37 @@ class _FirstPageState extends State<FirstPage> {
                   ),
                 ],
               ),
+              ExpansionTile(
+                title: const Text("Settings"),
+                leading: Icon(CupertinoIcons.square_list, color: Colors.black,),
+                children: [
+                  ListTile(
+                    title: const Text("Roles"),
+                    onTap: ()
+                    {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("Users"),
+                    onTap: ()
+                    {
+                      // Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UsersScreen()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("Face Detection"),
+                    onTap: ()
+                    {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              )
             ],
           ),
         ),
