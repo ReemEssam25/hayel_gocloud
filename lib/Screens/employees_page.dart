@@ -45,7 +45,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
       listen: false,
     ).token;
     var deleteStudent = await ApiServices.deleteEmployee(id, token);
-    deleteStudent == true ? Navigator.pop(context, true):Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
+    deleteStudent == true ? null:Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
   }
 
   @override
