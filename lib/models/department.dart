@@ -3,7 +3,7 @@ import 'dart:convert';
 class Department {
   int _id;
   String _departmentName;
-  Department(this._departmentName);
+  //Department(this._departmentName);
   Department.withId(this._id, this._departmentName);
 
   int get id => _id;
@@ -21,11 +21,6 @@ class Department {
       map["id"] = _id;
     }
     return map;
-  }
-
-  Department.fromObject(dynamic o) {
-    this._id = o["id"];
-    this._departmentName = o["departmentName"];
   }
 
   // factory department.fromJson(Map<String, dynamic> json) {

@@ -1,5 +1,5 @@
 import 'account_model.dart';
-
+/*
 class LoginModel {
   AccountModel account;
   String role;
@@ -25,3 +25,4 @@ class LoginModel {
     return data;
   }
 }
+*/

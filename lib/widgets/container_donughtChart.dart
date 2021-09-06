@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Container_DonughtChart extends StatelessWidget {
-  const Container_DonughtChart({Key key, this.chartData, this.chartData2, this.header}) : super(key: key);
+  const Container_DonughtChart(
+      {Key key, this.chartData, this.chartData2, this.header})
+      : super(key: key);
 
   final List<ChartData> chartData;
   final List<ChartData> chartData2;
@@ -15,14 +17,14 @@ class Container_DonughtChart extends StatelessWidget {
       child: Column(
         children: [
           Align(
-            alignment: Alignment.topLeft,
+              alignment: Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: Text(
                   header,
-                  style: TextStyle(fontSize: 20 , fontWeight: FontWeight.bold),),
-              )
-          ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              )),
           Divider(
             thickness: 2,
           ),
@@ -30,37 +32,36 @@ class Container_DonughtChart extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               SfCircularChart(
-                series: <CircularSeries> [
+                series: <CircularSeries>[
                   DoughnutSeries<ChartData, String>(
                       innerRadius: '95%',
                       radius: '53%',
                       dataSource: chartData2,
-                      pointColorMapper:(ChartData data,  _) => data.color,
+                      pointColorMapper: (ChartData data, _) => data.color,
                       xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y
-                  )
+                      yValueMapper: (ChartData data, _) => data.y)
                 ],
               ),
               SfCircularChart(
-                series: <CircularSeries> [
+                series: <CircularSeries>[
                   DoughnutSeries<ChartData, String>(
                       innerRadius: '70%',
                       dataSource: chartData,
-                      pointColorMapper:(ChartData data,  _) => data.color,
+                      pointColorMapper: (ChartData data, _) => data.color,
                       xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y
-                  )
+                      yValueMapper: (ChartData data, _) => data.y)
                 ],
               ),
-              Text("Not Attended\n       100%", style: TextStyle(fontSize: 20),)
+              Text(
+                "Not Attended\n       100%",
+                style: TextStyle(fontSize: 20),
+              )
             ],
           ),
         ],
       ),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5)
-      ),
+          color: Colors.white, borderRadius: BorderRadius.circular(5)),
     );
   }
 }

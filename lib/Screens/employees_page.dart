@@ -9,43 +9,44 @@ import 'package:hayel_gocloud/models/employees_model.dart';
 import 'package:provider/provider.dart';
 
 class EmployeesPage extends StatefulWidget {
-  ApiServices api = new ApiServices();
+  ApiServices api = ApiServices.getinstance();
 
   @override
   _EmployeesPageState createState() => _EmployeesPageState();
 }
 
 class _EmployeesPageState extends State<EmployeesPage> {
-
   String token;
   List<Employee> listViewItems = new List<Employee>();
-
 
   getEmployee() {
     token = Provider.of<Auth>(
       context,
       listen: false,
     ).token;
-      widget.api.fetchEmployee(token).then((responce){
-        var EmployeeJsonObject = jsonDecode(responce.body)['data'] as List;
-        List <Employee> employeeList= EmployeeJsonObject.map((e) => Employee.fromJson(e)).toList();
+    widget.api.fetchEmployee(token).then((responce) {
+      var EmployeeJsonObject = jsonDecode(responce.body)['data'] as List;
+      List<Employee> employeeList =
+          EmployeeJsonObject.map((e) => Employee.fromJson(e)).toList();
 
       setState(() {
-        for (int i = 0 ; i < employeeList.length;i++)
-          {
-            listViewItems.add(employeeList[i]);
-          }
+        for (int i = 0; i < employeeList.length; i++) {
+          listViewItems.add(employeeList[i]);
+        }
       });
     });
   }
 
-  void deleteStudent(int id)async{
+  void deleteStudent(int id) async {
     token = Provider.of<Auth>(
       context,
       listen: false,
     ).token;
     var deleteStudent = await ApiServices.deleteEmployee(id, token);
-    deleteStudent == true ? null:Scaffold.of(context).showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
+    deleteStudent == true
+        ? null
+        : Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
   }
 
   @override
@@ -68,71 +69,80 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 padding: const EdgeInsets.all(15),
                 child: Text(
                   "Employees ",
-                  style: TextStyle(fontSize: 20 , fontWeight: FontWeight.bold),),
-              )
-          ),
-
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              )),
           Divider(
             thickness: 2,
           ),
-
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: FlatButton(
                 padding: EdgeInsets.all(15),
-                  onPressed: () async {
-                    Employee newEmployee =await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditEmployee(employee: null,)),
-                    );
-                    setState(() {
-                      listViewItems.add(newEmployee);
-                    });
-                  },
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                  child: Text("Create" , style: TextStyle(color: Colors.white, fontSize: 20),),
-                  color: Color(0xFF26D5F2),
+                onPressed: () async {
+                  Employee newEmployee = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditEmployee(
+                              employee: null,
+                            )),
+                  );
+                  setState(() {
+                    listViewItems.add(newEmployee);
+                  });
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: Text(
+                  "Create",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                color: Color(0xFF26D5F2),
               ),
             ),
           ),
-
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               OutlineButton(
                 padding: EdgeInsets.all(15),
-                onPressed: (){},
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                child: Text("Copy" , style: TextStyle(fontSize: 20, color: Color(0xFF6B6B9E)),),
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: Text(
+                  "Copy",
+                  style: TextStyle(fontSize: 20, color: Color(0xFF6B6B9E)),
+                ),
                 borderSide: BorderSide(width: .5, color: Colors.grey),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               OutlineButton(
                 padding: EdgeInsets.all(15),
-                onPressed: (){},
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                child: Text("Excel" , style: TextStyle(fontSize: 20, color: Color(0xFF6B6B9E)),),
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: Text(
+                  "Excel",
+                  style: TextStyle(fontSize: 20, color: Color(0xFF6B6B9E)),
+                ),
                 borderSide: BorderSide(width: .5, color: Colors.grey),
               ),
             ],
           ),
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text("Show",
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Color(0xFF6B6B9E)
-                    )
+                    style: TextStyle(fontSize: 25, color: Color(0xFF6B6B9E))),
+                SizedBox(
+                  width: 10,
                 ),
-
-                SizedBox(width: 10,),
-
                 DropdownButtonHideUnderline(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8),
@@ -150,47 +160,35 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     ),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        border: Border.all(width: .5)
-                    ),
+                        border: Border.all(width: .5)),
                   ),
                 ),
-
-                SizedBox(width: 10,),
-
-                Text("entries",
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Color(0xFF6B6B9E)
-                    )
+                SizedBox(
+                  width: 10,
                 ),
+                Text("entries",
+                    style: TextStyle(fontSize: 25, color: Color(0xFF6B6B9E))),
               ],
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text("Search:  ",
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Color(0xFF6B6B9E)
-                    )
-                ),
+                    style: TextStyle(fontSize: 25, color: Color(0xFF6B6B9E))),
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1,color: Colors.black)
-                      )
-                    ),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 1, color: Colors.black))),
                   ),
                 )
               ],
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(15),
             child: Column(
@@ -203,104 +201,166 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     dataRowHeight: 150,
                     headingRowHeight: 70,
                     columns: [
-                      DataColumn(label: tableField(Colors.black, "Code", 70),),
-                      DataColumn(label: tableField(Colors.black, "English \nName", 70),),
-                      DataColumn(label: tableField(Colors.black, "Arabic \nName",70),),
-                      DataColumn(label: tableField(Colors.black, "Job \nTitle", 70),),
-                      DataColumn(label: tableField(Colors.black, "Department", 70),),
-                      DataColumn(label: tableField(Colors.black, "Insurance", 70),),
-                      DataColumn(label: tableField(Colors.black, "Email", 70),),
-                      DataColumn(label: tableField(Colors.black, " ", 70),),
+                      DataColumn(
+                        label: tableField(Colors.black, "Code", 70),
+                      ),
+                      DataColumn(
+                        label: tableField(Colors.black, "English \nName", 70),
+                      ),
+                      DataColumn(
+                        label: tableField(Colors.black, "Arabic \nName", 70),
+                      ),
+                      DataColumn(
+                        label: tableField(Colors.black, "Job \nTitle", 70),
+                      ),
+                      DataColumn(
+                        label: tableField(Colors.black, "Department", 70),
+                      ),
+                      DataColumn(
+                        label: tableField(Colors.black, "Insurance", 70),
+                      ),
+                      DataColumn(
+                        label: tableField(Colors.black, "Email", 70),
+                      ),
+                      DataColumn(
+                        label: tableField(Colors.black, " ", 70),
+                      ),
                     ],
-                    rows:listViewItems==null?
-                    [
-                      DataRow(cells:[
-                            DataCell(tableField(Colors.grey, "" , 150),),
-                            DataCell(tableField(Colors.grey, "" , 150),),
-                            DataCell(tableField(Colors.grey, "" , 150),),
-                            DataCell(tableField(Colors.grey, "" , 150),),
-                            DataCell(tableField(Colors.grey, "" , 150),),
-                            DataCell(tableField(Colors.grey, "" , 150),),
-                            DataCell(tableField(Colors.grey, "" , 150),),
-                            DataCell(tableField(Colors.grey, "" , 150),)
+                    rows: listViewItems == null
+                        ? [
+                            DataRow(cells: [
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "", 150),
+                              )
+                            ])
                           ]
-                      )]
-                      :
-                      listViewItems.map((e) => DataRow(
-                        cells: <DataCell>[
-                          DataCell(tableField(Colors.grey, e.code.toString()??" " , 150),),
-                          DataCell(tableField(Colors.grey, e.englishName??" " , 150),),
-                          DataCell(tableField(Colors.grey, e.arabicName??" " , 150),),
-                          DataCell(tableField(Colors.grey, e.jobTitle??" " , 150),),
-                          DataCell(tableField(Colors.grey, e.departmentId.toString()??" " , 150),),
-                          DataCell(tableField(Colors.grey,  "Yes" , 150),),
-                          DataCell(tableField(Colors.grey, e.email??" " , 150),),
-                          DataCell(Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.all(5),
-                            height: 150,
-                            width: 110,
-                            child:Wrap(
-                              direction: Axis.horizontal,
-                              children: [
-                                FlatButton(
-                                  onPressed: () async{
-                                    int index = listViewItems.indexOf(e);
+                        : listViewItems
+                            .map((e) => DataRow(cells: <DataCell>[
+                                  DataCell(
+                                    tableField(Colors.grey,
+                                        e.code.toString() ?? " ", 150),
+                                  ),
+                                  DataCell(
+                                    tableField(
+                                        Colors.grey, e.englishName ?? " ", 150),
+                                  ),
+                                  DataCell(
+                                    tableField(
+                                        Colors.grey, e.arabicName ?? " ", 150),
+                                  ),
+                                  DataCell(
+                                    tableField(
+                                        Colors.grey, e.jobTitle ?? " ", 150),
+                                  ),
+                                  DataCell(
+                                    tableField(Colors.grey,
+                                        e.departmentId.toString() ?? " ", 150),
+                                  ),
+                                  DataCell(
+                                    tableField(Colors.grey, "Yes", 150),
+                                  ),
+                                  DataCell(
+                                    tableField(
+                                        Colors.grey, e.email ?? " ", 150),
+                                  ),
+                                  DataCell(Container(
+                                    alignment: Alignment.centerLeft,
+                                    padding: EdgeInsets.all(5),
+                                    height: 150,
+                                    width: 110,
+                                    child: Wrap(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        FlatButton(
+                                          onPressed: () async {
+                                            int index =
+                                                listViewItems.indexOf(e);
 
-                                    print(index);
+                                            print(index);
 
-                                    Employee newEmployee =await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => EditEmployee(employee: e,)),
-                                    );
-                                    print(newEmployee.englishName);
-                                    if (newEmployee!=null)
-                                      {
-                                        setState(() {
-                                          listViewItems[index] = newEmployee;
-                                          print(listViewItems[index].arabicName);
-                                        });
-                                      }
-                                  },
-                                  child: Text("Edit" , style: TextStyle(fontSize: 17, color: Colors.white),),
-                                  color:Colors.lightBlue ,
-                                ),
-                                FlatButton(
-                                  onPressed: (){
-                                    deleteStudent(e.id);
-                                    setState(() {
-                                      listViewItems.remove(e);
-                                    });
-                                  },
-                                  child: Icon(Icons.delete_rounded, color: Colors.white,),
-                                  color:Colors.red ,
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: 1),
-                            ),
-                          )),
-
-                        ]
-                      )).toList(),
+                                            Employee newEmployee =
+                                                await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditEmployee(
+                                                        employee: e,
+                                                      )),
+                                            );
+                                            print(newEmployee.englishName);
+                                            if (newEmployee != null) {
+                                              setState(() {
+                                                listViewItems[index] =
+                                                    newEmployee;
+                                                print(listViewItems[index]
+                                                    .arabicName);
+                                              });
+                                            }
+                                          },
+                                          child: Text(
+                                            "Edit",
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                color: Colors.white),
+                                          ),
+                                          color: Colors.lightBlue,
+                                        ),
+                                        FlatButton(
+                                          onPressed: () {
+                                            deleteStudent(e.id);
+                                            setState(() {
+                                              listViewItems.remove(e);
+                                            });
+                                          },
+                                          child: Icon(
+                                            Icons.delete_rounded,
+                                            color: Colors.white,
+                                          ),
+                                          color: Colors.red,
+                                        )
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey, width: 1),
+                                    ),
+                                  )),
+                                ]))
+                            .toList(),
                   ),
                 )
               ],
             ),
           )
-
         ],
       ),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5)
-      ),
+          color: Colors.white, borderRadius: BorderRadius.circular(5)),
     );
   }
 
-  static Widget tableField(Color color , String title , double height)
-  {
+  static Widget tableField(Color color, String title, double height) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.all(5),
@@ -312,10 +372,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
           Expanded(
             child: Text(
               title,
-              style: TextStyle(
-                  fontSize: 17,
-                  color: color
-              ),
+              style: TextStyle(fontSize: 17, color: color),
             ),
           ),
         ],
@@ -325,6 +382,4 @@ class _EmployeesPageState extends State<EmployeesPage> {
       ),
     );
   }
-
-
 }

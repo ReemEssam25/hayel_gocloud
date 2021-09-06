@@ -18,80 +18,12 @@ class departmentScreen extends StatefulWidget {
 
 class _departmentScreenState extends State<departmentScreen> {
   List<Department> _departments = [];
-  ApiServices api = new ApiServices();
+
   String token;
+  ApiServices api = ApiServices.getinstance();
   @override
   void initState() {
     super.initState();
-    // _departments = api.fetchDepartmet() ;
-    getDepartments();
-  }
-
-  deleteDepartment(int id) async {
-    final response = await http.delete(
-      Uri.parse("https://localhost:44328/department/Delete/$id"),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: 'bearer $token',
-        "Content-Type": "application/json"
-      },
-    );
-
-    getDepartments();
-  }
-
-  UpdateDepartment(Department dep) async {
-    final response =
-        await http.post(Uri.parse("https://localhost:44328/department/Update"),
-            headers: <String, String>{
-              HttpHeaders.authorizationHeader: 'bearer $token',
-              "Content-Type": "application/json"
-            },
-            body: jsonEncode({
-              "id": dep.id,
-              "name": dep.departmentName,
-            }));
-    if (response.statusCode != 200) {
-      throw ('couldnot update department');
-    }
-    // getDepartments();
-  }
-
-  getDepartments() {
-    token = Provider.of<Auth>(
-      context,
-      listen: false,
-    ).token;
-    api.fetchDepartmet(token).then((response) {
-      var departmentJsonObject = jsonDecode(response.body)['data'] as List;
-      List<Department> DepartmentTempList =
-          departmentJsonObject.map((e) => Department.fromJson(e)).toList();
-
-      setState(() {
-        _departments = DepartmentTempList;
-      });
-    });
-  }
-
-  createDepartment(String depName) async {
-    final response =
-        await http.post(Uri.parse("https://localhost:44328/department/Insert"),
-            headers: {
-              // "Access-Control-Allow-Origin": "*",
-              //"Access-Control-Allow-Methods": "POST, OPTIONS",
-              HttpHeaders.authorizationHeader: 'bearer $token',
-              "Content-Type": "application/json"
-            },
-            body: jsonEncode(<String, String>{
-              'name': depName,
-            }));
-
-    //getDepartments();
-    if (response.statusCode == 200) {
-      getDepartments();
-      return response;
-    } else {
-      throw Exception('failed to create deprtment');
-    }
   }
 
   @override
@@ -170,7 +102,7 @@ class _departmentScreenState extends State<departmentScreen> {
                                 borderSide: BorderSide(color: Colors.green),
                                 onPressed: () {
                                   setState(() {
-                                    createDepartment(
+                                    api.createDepartment(
                                         departmentsController.text);
                                   });
                                 },
@@ -207,80 +139,97 @@ class _departmentScreenState extends State<departmentScreen> {
                   Divider(
                     color: Color(0xFFEFEFF6),
                   ),
-                  DataTable(
-                    columnSpacing: 15,
-                    columns: [
-                      DataColumn(
-                        label: Text(
-                          "#",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        numeric: true,
-                        //  tooltip:
-                      ),
-                      DataColumn(
-                        label: Text(
-                          "Department",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        numeric: false,
-                        //  tooltip:
-                      ),
-                      DataColumn(
-                        label: SizedBox(
-                          width: 50,
-                        ),
-                        numeric: false,
-                      )
-                    ],
-                    rows: _departments
-                        .map(
-                          (department) => DataRow(cells: [
-                            DataCell(Text(
-                              "${department.id}",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.black87,
-                              ),
-                            )),
-                            DataCell(
-                              SizedBox(
-                                width: mediaQuery.size.width * 0.4,
-                                child: TextFormField(
-                                  initialValue: '${department.departmentName}',
-                                  onFieldSubmitted: (val) {
-                                    UpdateDepartment(
-                                        Department.withId(department.id, val));
-                                  },
-                                ),
-                              ),
-                              showEditIcon: true,
-                            ),
-                            DataCell(
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    size: 24,
+                  FutureBuilder(
+                      future: api.fetchDepartmet(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Department>> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return CircularProgressIndicator();
+                          default:
+                            if (snapshot.hasError)
+                              return Text('Error ' + snapshot.error.toString());
+                            else
+                              _departments = snapshot.data;
+                            return DataTable(
+                              columnSpacing: 15,
+                              columns: [
+                                DataColumn(
+                                  label: Text(
+                                    "#",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      deleteDepartment(department.id);
-                                    });
-                                  }),
-                            )
-                          ]),
-                        )
-                        .toList(),
-                  ),
+                                  numeric: true,
+                                  //  tooltip:
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    "Department",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  numeric: false,
+                                  //  tooltip:
+                                ),
+                                DataColumn(
+                                  label: SizedBox(
+                                    width: 50,
+                                  ),
+                                  numeric: false,
+                                )
+                              ],
+                              rows: _departments
+                                  .map(
+                                    (department) => DataRow(cells: [
+                                      DataCell(Text(
+                                        "${department.id}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: Colors.black87,
+                                        ),
+                                      )),
+                                      DataCell(
+                                        SizedBox(
+                                          width: mediaQuery.size.width * 0.4,
+                                          child: TextFormField(
+                                            initialValue:
+                                                '${department.departmentName}',
+                                            onFieldSubmitted: (val) {
+                                              api.UpdateDepartment(
+                                                  Department.withId(
+                                                      department.id, val));
+                                            },
+                                          ),
+                                        ),
+                                        showEditIcon: true,
+                                      ),
+                                      DataCell(
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              size: 24,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                api.deleteDepartment(
+                                                    department.id);
+                                              });
+                                            }),
+                                      )
+                                    ]),
+                                  )
+                                  .toList(),
+                            );
+                        }
+                      })
                 ],
               ))
         ],

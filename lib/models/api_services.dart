@@ -1,52 +1,93 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
 //import 'dart:developer';
+import 'package:dio/dio.dart';
+
+import 'package:hayel_gocloud/models/department.dart';
+import 'package:hayel_gocloud/models/users.dart';
 //import 'dart:html';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
+import 'auth.dart';
 import 'employees_model.dart';
 
 class ApiServices {
   final departmentUrl = 'https://localhost:44328/department/GetAll';
   final UsersUrl = 'https://localhost:44328/Account/GetAll';
+  Dio dio = new Dio();
 
-  Future fetchDepartmet(String token) async {
-    final response = await http.get(Uri.parse(departmentUrl), headers: {
-      HttpHeaders.authorizationHeader: 'bearer $token',
-    });
-    if (response.statusCode == 200) {
-      print(response.body.toString());
-      return response;
-    } else {
-      final responseData = json.decode(response.body);
+  String token;
+  void initdio() {
+    dio.options.headers["Authorization"] = 'bearer $token';
+  }
 
-      if (responseData['error'] != null) {
-        print(responseData['error']['message'].toString());
-      }
+  static final ApiServices _api = ApiServices._internal();
+  factory ApiServices(String token) {
+    _api.token = token;
+    _api.initdio();
+    return _api;
+  }
+  static ApiServices getinstance() {
+    return _api;
+  }
 
-      throw Exception('Failed to load departments from API');
+  ApiServices._internal();
+
+  Future<List<users>> fetchUsers() async {
+    final response = await dio.get(UsersUrl);
+    try {
+      return (response.data['data'] as List)
+          .map((e) => users.fromJson(e))
+          .toList();
+    } catch (error, stacktrace) {
+      throw Exception("errror: " +
+          error.toString() +
+          "  stacktrace " +
+          stacktrace.toString());
     }
   }
 
-  Future fetchUsers(String token) async {
-    final response = await http.get(Uri.parse(UsersUrl), headers: {
-      HttpHeaders.authorizationHeader: 'bearer $token',
-    });
+  Future<void> deleteUser(String id) async {
+    final response =
+        await dio.delete("https://localhost:44328/Account/Delete?id=$id");
+
+    //  widget.updateUsers();
+  }
+
+  Future<List<Department>> fetchDepartmet() async {
+    final response = await dio.get(departmentUrl);
+    try {
+      return (response.data['data'] as List)
+          .map((e) => Department.fromJson(e))
+          .toList();
+    } catch (error, stacktrace) {
+      throw Exception("errror: " +
+          error.toString() +
+          "  stacktrace " +
+          stacktrace.toString());
+    }
+  }
+
+  createDepartment(String depName) async {
+    final response = await dio.post("https://localhost:44328/department/Insert",
+        data: jsonEncode(<String, String>{
+          'name': depName,
+        }));
     if (response.statusCode == 200) {
-      print(response.body.toString());
       return response;
     } else {
-      throw Exception('Failed to load users from API');
+      throw Exception('failed to create deprtment');
     }
   }
 
   static String employeeUrl = 'https://localhost:44328/employee/';
 
-
   Future fetchEmployee(String token) async {
-    final response = await http.get(Uri.parse(employeeUrl+"GetAll"), headers: {
+    final response =
+        await http.get(Uri.parse(employeeUrl + "GetAll"), headers: {
       HttpHeaders.authorizationHeader: 'bearer $token',
     });
     if (response.statusCode == 200) {
@@ -63,20 +104,37 @@ class ApiServices {
     }
   }
 
-  static Map<String, String> header = {
-    'Content-type': 'application/json',
-    'Accept': 'application/json'
-  };
+  UpdateDepartment(Department dep) async {
+    final response = await dio.post("https://localhost:44328/department/Update",
+        data: jsonEncode({
+          "id": dep.id,
+          "name": dep.departmentName,
+        }));
+
+    if (response.statusCode != 200) {
+      throw ('couldnot update department');
+    }
+    // getDepartments();
+  }
+
+  deleteDepartment(int id) async {
+    final response =
+        await dio.delete("https://localhost:44328/department/Delete/$id");
+
+    //getDepartments();
+  }
+
   static Future<bool> postEmployee(Employee employee, String token) async {
     var myEmployee = employee.toMap();
     var employeeBody = convert.json.encode(myEmployee);
-    var res = await http.post(Uri.parse(employeeUrl+"Insert"),
+    var res = await http.post(Uri.parse(employeeUrl + "Insert"),
         headers: {
           // "Access-Control-Allow-Origin": "*",
           //"Access-Control-Allow-Methods": "POST, OPTIONS",
           HttpHeaders.authorizationHeader: 'bearer $token',
           "Content-Type": "application/json"
-        }, body: employeeBody);
+        },
+        body: employeeBody);
 
     return Future.value(res.statusCode == 200 ? true : false);
   }
@@ -84,25 +142,23 @@ class ApiServices {
   static Future<Employee> updateEmployee(Employee e, String token) async {
     var myEmployee = e.toMap();
     var employeeBody = convert.json.encode(myEmployee);
-    final res = await http.put(Uri.parse(employeeUrl+"Update/"),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: 'bearer $token',
-        "Content-Type": "application/json"
-      },
-      body: employeeBody
-    );
+    final res = await http.put(Uri.parse(employeeUrl + "Update/"),
+        headers: <String, String>{
+          HttpHeaders.authorizationHeader: 'bearer $token',
+          "Content-Type": "application/json"
+        },
+        body: employeeBody);
 
-    if (res.statusCode==200)
-      {
-        return Employee.fromJson(jsonDecode(res.body));
-      }
-    else {
+    if (res.statusCode == 200) {
+      return Employee.fromJson(jsonDecode(res.body));
+    } else {
       throw Exception('Faild to update an employee');
     }
   }
 
   static Future<bool> deleteEmployee(int id, String token) async {
-    var res = await http.delete(Uri.parse(employeeUrl+"Delete/" + id.toString()),
+    var res = await http.delete(
+      Uri.parse(employeeUrl + "Delete/" + id.toString()),
       headers: <String, String>{
         HttpHeaders.authorizationHeader: 'bearer $token',
         "Content-Type": "application/json"
@@ -113,3 +169,5 @@ class ApiServices {
 }
 //Creating a list to store input data;
  
+
+

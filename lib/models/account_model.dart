@@ -1,4 +1,4 @@
-class AccountModel {
+/*class AccountModel {
   String username;
   String password;
   String phoneNumber;
@@ -28,3 +28,4 @@ class AccountModel {
     return data;
   }
 }
+*/

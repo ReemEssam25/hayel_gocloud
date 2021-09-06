@@ -4,9 +4,10 @@ class users {
   String _email;
   String _phone;
   String _EmployeName;
-  users(this._EmployeName, this._phone, this._email, this._username);
   users.withId(
       this._id, this._EmployeName, this._phone, this._email, this._username);
+
+  //users(this._EmployeName, this._phone, this._email, this._username);
 
   String get id => _id;
 

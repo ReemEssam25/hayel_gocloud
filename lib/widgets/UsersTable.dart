@@ -2,15 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/Screens/EditUser.dart';
+import 'package:hayel_gocloud/models/api_services.dart';
 
 import 'package:hayel_gocloud/models/users.dart';
 import 'package:http/http.dart' as http;
 
 class UsersTable extends StatefulWidget {
   List<users> _Users;
-  String token;
-  final Function updateUsers;
-  UsersTable(this._Users, this.token, this.updateUsers);
+
+  //final Function updateUsers;
+  UsersTable(this._Users);
   bool icon_color = false;
 
   @override
@@ -22,16 +23,12 @@ class UsersTable extends StatefulWidget {
 class _UsersTableState extends State<UsersTable> {
   Color color;
 
-  void deleteUser(String id) async {
-    String token = widget.token;
-    final response = await http.delete(
-        Uri.parse("https://localhost:44328/Account/Delete?id=$id"),
-        headers: <String, String>{
-          HttpHeaders.authorizationHeader: 'bearer $token',
-          "Content-Type": "application/json"
-        });
-
-    widget.updateUsers();
+  ApiServices api = ApiServices.getinstance();
+  updateUsers() async {
+    List<users> tem = await api.fetchUsers();
+    setState(() {
+      widget._Users = tem;
+    });
   }
 
   @override
@@ -335,9 +332,19 @@ class _UsersTableState extends State<UsersTable> {
                         width: 5,
                       ),
                       ElevatedButton.icon(
-                          onPressed: () => {
-                                deleteUser(user.id),
-                              },
+                          onPressed: () {
+                            api
+                                .deleteUser(user.id)
+                                .then((value) => updateUsers());
+                            // sleep(Duration(seconds: 5));
+
+                            //sleep(Duration(seconds: 5));
+                            print(widget._Users.length);
+                            setState(() {
+                              widget._Users;
+                            });
+                            //widget._Users = api.fetchUsers() as List<users>;
+                          },
                           style: ElevatedButton.styleFrom(primary: Colors.cyan),
                           icon: Icon(
                             Icons.delete,

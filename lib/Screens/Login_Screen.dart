@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     onSaved: (value) {
                                       _authData['username'] = value;
                                       print(" _authData['username'] " +
-                                          _authData['username']);
+                                          _authData['username'].toString());
                                     },
                                   ),
                                   SizedBox(
