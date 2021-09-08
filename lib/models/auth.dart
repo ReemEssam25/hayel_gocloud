@@ -32,7 +32,8 @@ class Auth with ChangeNotifier {
     var authHeader = '${base64.encode(utf8.encode('$username:$password'))}';
 
     //print('Bearer $authHeader');
-    final url = Uri.parse('https://localhost:44328/Account/LoginWithJWT');
+    final url = Uri.parse(
+        'http://kerols3489-001-site1.btempurl.com/Account/LoginWithJWT');
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",

@@ -15,8 +15,9 @@ import 'auth.dart';
 import 'employees_model.dart';
 
 class ApiServices {
-  final departmentUrl = 'https://localhost:44328/department/GetAll';
-  final UsersUrl = 'https://localhost:44328/Account/GetAll';
+  final departmentUrl =
+      'http://kerols3489-001-site1.btempurl.com/department/GetAll';
+  final UsersUrl = 'http://kerols3489-001-site1.btempurl.com/Account/GetAll';
   Dio dio = new Dio();
 
   String token;
@@ -51,8 +52,8 @@ class ApiServices {
   }
 
   Future<void> deleteUser(String id) async {
-    final response =
-        await dio.delete("https://localhost:44328/Account/Delete?id=$id");
+    final response = await dio.delete(
+        "http://kerols3489-001-site1.btempurl.com/Account/Delete?id=$id");
 
     //  widget.updateUsers();
   }
@@ -72,7 +73,8 @@ class ApiServices {
   }
 
   createDepartment(String depName) async {
-    final response = await dio.post("https://localhost:44328/department/Insert",
+    final response = await dio.post(
+        "http://kerols3489-001-site1.btempurl.com/department/Insert",
         data: jsonEncode(<String, String>{
           'name': depName,
         }));
@@ -105,7 +107,8 @@ class ApiServices {
   }
 
   UpdateDepartment(Department dep) async {
-    final response = await dio.post("https://localhost:44328/department/Update",
+    final response = await dio.post(
+        "http://kerols3489-001-site1.btempurl.com/department/Update",
         data: jsonEncode({
           "id": dep.id,
           "name": dep.departmentName,
@@ -118,8 +121,8 @@ class ApiServices {
   }
 
   deleteDepartment(int id) async {
-    final response =
-        await dio.delete("https://localhost:44328/department/Delete/$id");
+    final response = await dio.delete(
+        "http://kerols3489-001-site1.btempurl.com/department/Delete/$id");
 
     //getDepartments();
   }
