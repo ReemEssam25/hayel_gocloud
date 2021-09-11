@@ -26,6 +26,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (loginResponse != 200)
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('invalid username or password')));
+    else{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('username', _authData['username']);
+    }
   }
 
   @override
@@ -134,8 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       return null;
                                     },
                                     onSaved: (value) async {
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      prefs.setString('username', value);
                                       _authData['username'] = value;
                                       print(" _authData['username'] " +
                                           _authData['username'].toString());

@@ -5,7 +5,9 @@ import 'package:hayel_gocloud/Screens/employees_page.dart';
 import 'package:hayel_gocloud/models/api_services.dart';
 import 'package:hayel_gocloud/models/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Login_Screen.dart';
 import 'department_Screen.dart';
 import 'home_page.dart';
 
@@ -48,7 +50,17 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: Icon(Icons.circle)),
+      appBar: AppBar(
+        leading: Icon(Icons.circle),
+        actions: [
+          IconButton(icon: Icon(Icons.logout), onPressed:() async{
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.remove('username');
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
+          })
+        ],
+      ),
       body: Scaffold(
         key: _drawerKey,
         appBar: AppBar(
@@ -228,7 +240,17 @@ class _FirstPageState extends State<FirstPage> {
                     },
                   ),
                 ],
-              )
+              ),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: const Text("Logout"),
+                onTap: () async{
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.remove('username');
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
+                },
+              ),
             ],
           ),
         ),

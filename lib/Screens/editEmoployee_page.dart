@@ -20,11 +20,12 @@ class _EditEmployeeState extends State<EditEmployee> {
   TextEditingController arabicNameController = TextEditingController();
   TextEditingController jobTitleController = TextEditingController();
   String departmentController;
-  TextEditingController insuranceController = TextEditingController();
+  //TextEditingController insuranceController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   Future<Employee> _futureEmployee;
   List<Department> _departments = [];
   List<String> _departmentName = [];
+  String insuranceText ;
 
   ApiServices api = ApiServices.getinstance();
 
@@ -62,12 +63,13 @@ class _EditEmployeeState extends State<EditEmployee> {
       arabicNameController.text = widget.employee.arabicName;
       jobTitleController.text = widget.employee.jobTitle;
       departmentController = widget.employee.departmentId.toString();
-      insuranceController.text = widget.employee.insurance ? "Yes" : "No";
+      insuranceText = widget.employee.insurance ? "Yes" : "No";
       emailController.text = widget.employee.email;
     }
     else
       {
         departmentController = "3004";
+        insuranceText = "Yes";
       }
   }
 
@@ -140,67 +142,106 @@ class _EditEmployeeState extends State<EditEmployee> {
               ),
 
 
-              FutureBuilder(
-                  future: api.fetchDepartmet(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Department>> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return CircularProgressIndicator();
-                      default:
-                        if (snapshot.hasError)
-                          return Text('Error ' + snapshot.error.toString());
-                        else {
-                          _departments = snapshot.data;
-                          for (int i =0 ; i < _departments.length ; i++)
-                            {
-                              _departmentName.add(_departments[i].departmentName);
-                            }
-                        }
-                        return DropdownButton<String>(
-                          value: departmentController,
-                          icon: const Icon(Icons.arrow_downward),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.deepPurple),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.deepPurpleAccent,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              departmentController = newValue;
-                            });
-                          },
-                          items: _departments.map<DropdownMenuItem<String>>(
-                                  (e) => new DropdownMenuItem(
-                            child: Text(e.departmentName),
-                            value: e.id.toString(),
-                          )).toList(),
-                        );
-                    }
-                  }),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  children: [
+                    Text(
+                      "Department : ",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black26, fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    FutureBuilder(
+                        future: api.fetchDepartmet(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<Department>> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return CircularProgressIndicator();
+                            default:
+                              if (snapshot.hasError)
+                                return Text('Error ' + snapshot.error.toString());
+                              else {
+                                _departments = snapshot.data;
+                                for (int i =0 ; i < _departments.length ; i++)
+                                  {
+                                    _departmentName.add(_departments[i].departmentName);
+                                  }
+                              }
+                              return DropdownButton<String>(
+                                value: departmentController,
+                                icon: const Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.bold),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.deepPurpleAccent,
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    departmentController = newValue;
+                                  });
+                                },
+                                items: _departments.map<DropdownMenuItem<String>>(
+                                        (e) => new DropdownMenuItem(
+                                  child: Text(e.departmentName),
+                                  value: e.id.toString(),
+                                )).toList(),
+                              );
+                          }
+                        }),
+                  ],
+                ),
+              ),
+
 
 
               Padding(
                 padding: const EdgeInsets.all(15),
-                child: SizedBox(
-                  child: TextField(
-                    controller: insuranceController,
-                    decoration: InputDecoration(
-                        labelText: 'Insurance',
-                        labelStyle: TextStyle(
-                            color: Colors.black26, fontWeight: FontWeight.bold),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0))),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green[300]),
-                        )),
-                  ),
+                child: Row (
+                  children: [
+                    Text(
+                      "Insurance : ",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black26, fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    DropdownButton<String>(
+                      value: insuranceText,
+                      icon: const Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          insuranceText = newValue;
+                        });
+                      },
+                      items: ["Yes", "No"].map<DropdownMenuItem<String>>(
+                              (e) => new DropdownMenuItem(
+                            child: Text(e),
+                            value: e,
+                          )).toList(),
+                    ),
+                  ],
                 ),
               ),
+
+
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: SizedBox(
@@ -233,7 +274,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                             jobTitleController.text,
                             int.parse(departmentController),
                             emailController.text,
-                            insuranceController.text.toLowerCase() == "yes"
+                            insuranceText.toLowerCase() == "yes"
                                 ? true
                                 : false);
                         saveEmployee();
@@ -247,7 +288,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                             int.parse(departmentController),
                             widget.employee.department,
                             emailController.text,
-                            insuranceController.text.toLowerCase() == "yes"
+                            insuranceText.toLowerCase() == "yes"
                                 ? true
                                 : false);
                         updateEmployee(e);
