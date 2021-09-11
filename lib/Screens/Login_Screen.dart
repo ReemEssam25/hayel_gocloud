@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/models/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -132,7 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       print("in validatorrr");
                                       return null;
                                     },
-                                    onSaved: (value) {
+                                    onSaved: (value) async {
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      prefs.setString('username', value);
                                       _authData['username'] = value;
                                       print(" _authData['username'] " +
                                           _authData['username'].toString());

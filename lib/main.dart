@@ -7,13 +7,21 @@ import 'package:hayel_gocloud/Screens/editEmoployee_page.dart';
 import 'package:hayel_gocloud/Screens/home_page.dart';
 import 'package:hayel_gocloud/models/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var user = prefs.getString('username');
+  runApp(MyApp(myHome: user==null?LoginScreen():HomePage(),));
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
+  final Widget myHome;
+
+  const MyApp({Key key, this.myHome}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -23,7 +31,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Color(0xFFEFEFF6),
             primarySwatch: Colors.lightGreen,
           ),
-          home: LoginScreen()),
+          home: myHome),
     );
   }
 }

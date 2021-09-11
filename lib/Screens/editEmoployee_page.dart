@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/models/api_services.dart';
 import 'package:hayel_gocloud/models/auth.dart';
+import 'package:hayel_gocloud/models/department.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
 import 'package:provider/provider.dart';
 
@@ -18,22 +19,25 @@ class _EditEmployeeState extends State<EditEmployee> {
   TextEditingController englishNameController = TextEditingController();
   TextEditingController arabicNameController = TextEditingController();
   TextEditingController jobTitleController = TextEditingController();
-  TextEditingController departmentController = TextEditingController();
+  String departmentController;
   TextEditingController insuranceController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   Future<Employee> _futureEmployee;
+  List<Department> _departments = [];
+  List<String> _departmentName = [];
+
+  ApiServices api = ApiServices.getinstance();
 
   void saveEmployee() async {
     String token = Provider.of<Auth>(
       context,
       listen: false,
     ).token;
-    var saveResponce = await ApiServices.postEmployee(widget.employee, token);
+    var saveResponce = await ApiServices.getinstance().postEmployee(widget.employee, token);
 
     saveResponce == true
         ? Navigator.pop(context, widget.employee)
-        : Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
+        : print ("error adding new employee");
   }
 
   void updateEmployee(Employee e) async {
@@ -43,7 +47,7 @@ class _EditEmployeeState extends State<EditEmployee> {
     ).token;
 
     _futureEmployee =
-        (await ApiServices.updateEmployee(e, token)) as Future<Employee>;
+        (await ApiServices.getinstance().updateEmployee(e, token)) as Future<Employee>;
 
     print(_futureEmployee.toString());
   }
@@ -57,10 +61,14 @@ class _EditEmployeeState extends State<EditEmployee> {
       englishNameController.text = widget.employee.englishName;
       arabicNameController.text = widget.employee.arabicName;
       jobTitleController.text = widget.employee.jobTitle;
-      departmentController.text = widget.employee.departmentId.toString();
+      departmentController = widget.employee.departmentId.toString();
       insuranceController.text = widget.employee.insurance ? "Yes" : "No";
       emailController.text = widget.employee.email;
     }
+    else
+      {
+        departmentController = "3004";
+      }
   }
 
   @override
@@ -130,25 +138,50 @@ class _EditEmployeeState extends State<EditEmployee> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: SizedBox(
-                  child: TextField(
-                    controller: departmentController,
-                    decoration: InputDecoration(
-                        labelText: 'Department',
-                        labelStyle: TextStyle(
-                            color: Colors.black26, fontWeight: FontWeight.bold),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0))),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green[300]),
-                        )),
-                  ),
-                ),
-              ),
+
+
+              FutureBuilder(
+                  future: api.fetchDepartmet(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Department>> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return CircularProgressIndicator();
+                      default:
+                        if (snapshot.hasError)
+                          return Text('Error ' + snapshot.error.toString());
+                        else {
+                          _departments = snapshot.data;
+                          for (int i =0 ; i < _departments.length ; i++)
+                            {
+                              _departmentName.add(_departments[i].departmentName);
+                            }
+                        }
+                        return DropdownButton<String>(
+                          value: departmentController,
+                          icon: const Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: const TextStyle(color: Colors.deepPurple),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              departmentController = newValue;
+                            });
+                          },
+                          items: _departments.map<DropdownMenuItem<String>>(
+                                  (e) => new DropdownMenuItem(
+                            child: Text(e.departmentName),
+                            value: e.id.toString(),
+                          )).toList(),
+                        );
+                    }
+                  }),
+
+
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: SizedBox(
@@ -198,7 +231,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                             englishNameController.text,
                             arabicNameController.text,
                             jobTitleController.text,
-                            int.parse(departmentController.text),
+                            int.parse(departmentController),
                             emailController.text,
                             insuranceController.text.toLowerCase() == "yes"
                                 ? true
@@ -211,7 +244,7 @@ class _EditEmployeeState extends State<EditEmployee> {
                             englishNameController.text,
                             arabicNameController.text,
                             jobTitleController.text,
-                            int.parse(departmentController.text),
+                            int.parse(departmentController),
                             widget.employee.department,
                             emailController.text,
                             insuranceController.text.toLowerCase() == "yes"

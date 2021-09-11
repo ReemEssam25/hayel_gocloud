@@ -18,6 +18,9 @@ class ApiServices {
   final departmentUrl =
       'http://kerols3489-001-site1.btempurl.com/department/GetAll';
   final UsersUrl = 'http://kerols3489-001-site1.btempurl.com/Account/GetAll';
+
+  static String employeeUrl = 'http://kerols3489-001-site1.btempurl.com/employee/';
+
   Dio dio = new Dio();
 
   String token;
@@ -85,25 +88,21 @@ class ApiServices {
     }
   }
 
-  static String employeeUrl = 'https://localhost:44328/employee/';
 
-  Future fetchEmployee(String token) async {
-    final response =
-        await http.get(Uri.parse(employeeUrl + "GetAll"), headers: {
-      HttpHeaders.authorizationHeader: 'bearer $token',
-    });
-    if (response.statusCode == 200) {
-      print(response.body.toString());
-      return response;
-    } else {
-      final responseData = json.decode(response.body);
 
-      if (responseData['error'] != null) {
-        print(responseData['error']['message'].toString());
-      }
-
-      throw Exception('Failed to load departments from API');
+  Future<List<Employee>> fetchEmployee() async {
+    final response = await dio.get(employeeUrl + "GetAll");
+    try {
+      return (response.data['data'] as List)
+          .map((e) => Employee.fromJson(e))
+          .toList();
+    } catch (error, stacktrace) {
+      throw Exception("errror: " +
+          error.toString() +
+          "  stacktrace " +
+          stacktrace.toString());
     }
+
   }
 
   UpdateDepartment(Department dep) async {
@@ -127,7 +126,7 @@ class ApiServices {
     //getDepartments();
   }
 
-  static Future<bool> postEmployee(Employee employee, String token) async {
+  Future<bool> postEmployee(Employee employee, String token) async {
     var myEmployee = employee.toMap();
     var employeeBody = convert.json.encode(myEmployee);
     var res = await http.post(Uri.parse(employeeUrl + "Insert"),
@@ -142,7 +141,7 @@ class ApiServices {
     return Future.value(res.statusCode == 200 ? true : false);
   }
 
-  static Future<Employee> updateEmployee(Employee e, String token) async {
+  Future<Employee> updateEmployee(Employee e, String token) async {
     var myEmployee = e.toMap();
     var employeeBody = convert.json.encode(myEmployee);
     final res = await http.put(Uri.parse(employeeUrl + "Update/"),

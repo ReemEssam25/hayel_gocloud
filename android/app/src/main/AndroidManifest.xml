@@ -2,6 +2,7 @@
     package="com.example.hayel_gocloud">
    <application
         android:label="hayel_gocloud"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -38,4 +39,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

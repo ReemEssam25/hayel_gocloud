@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hayel_gocloud/Screens/editEmoployee_page.dart';
 import 'package:hayel_gocloud/models/api_services.dart';
 import 'package:hayel_gocloud/models/auth.dart';
+import 'package:hayel_gocloud/models/department.dart';
 import 'package:hayel_gocloud/models/employees_model.dart';
 import 'package:provider/provider.dart';
 
@@ -18,26 +18,10 @@ class EmployeesPage extends StatefulWidget {
 class _EmployeesPageState extends State<EmployeesPage> {
   String token;
   List<Employee> listViewItems = new List<Employee>();
+  List<Department> _departments = [];
 
-  getEmployee() {
-    token = Provider.of<Auth>(
-      context,
-      listen: false,
-    ).token;
-    widget.api.fetchEmployee(token).then((responce) {
-      var EmployeeJsonObject = jsonDecode(responce.body)['data'] as List;
-      List<Employee> employeeList =
-          EmployeeJsonObject.map((e) => Employee.fromJson(e)).toList();
 
-      setState(() {
-        for (int i = 0; i < employeeList.length; i++) {
-          listViewItems.add(employeeList[i]);
-        }
-      });
-    });
-  }
-
-  void deleteStudent(int id) async {
+  void deleteEmployee(int id) async {
     token = Provider.of<Auth>(
       context,
       listen: false,
@@ -49,11 +33,19 @@ class _EmployeesPageState extends State<EmployeesPage> {
             .showSnackBar(SnackBar(content: Text("404, Connection Issue !")));
   }
 
+
+  Future<List<Employee>> getData() async {
+    _departments = await widget.api.fetchDepartmet();
+    return await widget.api.fetchEmployee();
+
+    //print ("department size = " + _departments.length.toString());
+  }
+
+
   @override
-  void initState() {
-    // TODO: implement initState
-    getEmployee();
+  void initState(){
     super.initState();
+    getData();
   }
 
   @override
@@ -195,39 +187,56 @@ class _EmployeesPageState extends State<EmployeesPage> {
               children: [
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    dividerThickness: 0,
-                    columnSpacing: 0,
-                    dataRowHeight: 150,
-                    headingRowHeight: 70,
-                    columns: [
-                      DataColumn(
-                        label: tableField(Colors.black, "Code", 70),
-                      ),
-                      DataColumn(
-                        label: tableField(Colors.black, "English \nName", 70),
-                      ),
-                      DataColumn(
-                        label: tableField(Colors.black, "Arabic \nName", 70),
-                      ),
-                      DataColumn(
-                        label: tableField(Colors.black, "Job \nTitle", 70),
-                      ),
-                      DataColumn(
-                        label: tableField(Colors.black, "Department", 70),
-                      ),
-                      DataColumn(
-                        label: tableField(Colors.black, "Insurance", 70),
-                      ),
-                      DataColumn(
-                        label: tableField(Colors.black, "Email", 70),
-                      ),
-                      DataColumn(
-                        label: tableField(Colors.black, " ", 70),
-                      ),
-                    ],
-                    rows: listViewItems == null
-                        ? [
+                  child: FutureBuilder(
+                  future: getData(),
+                  builder: (BuildContext context,
+                  AsyncSnapshot<List<Employee>> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return CircularProgressIndicator();
+                      default:
+                        if (snapshot.hasError)
+                          return Text('Error ' + snapshot.error.toString());
+                        else
+                          listViewItems = snapshot.data;
+                        return DataTable(
+                            dividerThickness: 0,
+                            columnSpacing: 0,
+                            dataRowHeight: 150,
+                            headingRowHeight: 70,
+                            columns: [
+                              DataColumn(
+                                label: tableField(Colors.black, "Code", 70),
+                              ),
+                              DataColumn(
+                                label: tableField(
+                                    Colors.black, "English \nName", 70),
+                              ),
+                              DataColumn(
+                                label: tableField(
+                                    Colors.black, "Arabic \nName", 70),
+                              ),
+                              DataColumn(
+                                label: tableField(
+                                    Colors.black, "Job \nTitle", 70),
+                              ),
+                              DataColumn(
+                                label: tableField(
+                                    Colors.black, "Department", 70),
+                              ),
+                              DataColumn(
+                                label: tableField(
+                                    Colors.black, "Insurance", 70),
+                              ),
+                              DataColumn(
+                                label: tableField(Colors.black, "Email", 70),
+                              ),
+                              DataColumn(
+                                label: tableField(Colors.black, " ", 70),
+                              ),
+                            ],
+                            rows: listViewItems == null
+                            ? [
                             DataRow(cells: [
                               DataCell(
                                 tableField(Colors.grey, "", 150),
@@ -254,100 +263,109 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                 tableField(Colors.grey, "", 150),
                               )
                             ])
-                          ]
-                        : listViewItems
-                            .map((e) => DataRow(cells: <DataCell>[
-                                  DataCell(
-                                    tableField(Colors.grey,
-                                        e.code.toString() ?? " ", 150),
-                                  ),
-                                  DataCell(
-                                    tableField(
-                                        Colors.grey, e.englishName ?? " ", 150),
-                                  ),
-                                  DataCell(
-                                    tableField(
-                                        Colors.grey, e.arabicName ?? " ", 150),
-                                  ),
-                                  DataCell(
-                                    tableField(
-                                        Colors.grey, e.jobTitle ?? " ", 150),
-                                  ),
-                                  DataCell(
-                                    tableField(Colors.grey,
-                                        e.departmentId.toString() ?? " ", 150),
-                                  ),
-                                  DataCell(
-                                    tableField(Colors.grey, "Yes", 150),
-                                  ),
-                                  DataCell(
-                                    tableField(
-                                        Colors.grey, e.email ?? " ", 150),
-                                  ),
-                                  DataCell(Container(
-                                    alignment: Alignment.centerLeft,
-                                    padding: EdgeInsets.all(5),
-                                    height: 150,
-                                    width: 110,
-                                    child: Wrap(
-                                      direction: Axis.horizontal,
-                                      children: [
-                                        FlatButton(
-                                          onPressed: () async {
-                                            int index =
-                                                listViewItems.indexOf(e);
+                            ]
+                                : listViewItems
+                            .map((e)
+                        =>
+                            DataRow(cells: <DataCell>[
+                              DataCell(
+                                tableField(Colors.grey,
+                                    e.code.toString() ?? " ", 150),
+                              ),
+                              DataCell(
+                                tableField(
+                                    Colors.grey, e.englishName ?? " ", 150),
+                              ),
+                              DataCell(
+                                tableField(
+                                    Colors.grey, e.arabicName ?? " ", 150),
+                              ),
+                              DataCell(
+                                tableField(
+                                    Colors.grey, e.jobTitle ?? " ", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey,"${_departments.firstWhere((element) => element.id==e.departmentId).departmentName}", 150),
+                              ),
+                              DataCell(
+                                tableField(Colors.grey, "Yes", 150),
+                              ),
+                              DataCell(
+                                tableField(
+                                    Colors.grey, e.email ?? " ", 150),
+                              ),
+                              DataCell(Container(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.all(5),
+                                height: 150,
+                                width: 110,
+                                child: Wrap(
+                                  direction: Axis.horizontal,
+                                  children: [
+                                    FlatButton(
+                                      onPressed: () async {
+                                        int index =
+                                        listViewItems.indexOf(e);
 
-                                            print(index);
+                                        print(index);
 
-                                            Employee newEmployee =
-                                                await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditEmployee(
-                                                        employee: e,
-                                                      )),
-                                            );
-                                            print(newEmployee.englishName);
-                                            if (newEmployee != null) {
-                                              setState(() {
-                                                listViewItems[index] =
-                                                    newEmployee;
-                                                print(listViewItems[index]
-                                                    .arabicName);
-                                              });
-                                            }
-                                          },
-                                          child: Text(
-                                            "Edit",
-                                            style: TextStyle(
-                                                fontSize: 17,
-                                                color: Colors.white),
-                                          ),
-                                          color: Colors.lightBlue,
-                                        ),
-                                        FlatButton(
-                                          onPressed: () {
-                                            deleteStudent(e.id);
-                                            setState(() {
-                                              listViewItems.remove(e);
-                                            });
-                                          },
-                                          child: Icon(
-                                            Icons.delete_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          color: Colors.red,
-                                        )
-                                      ],
+                                        Employee newEmployee =
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditEmployee(
+                                                    employee: e,
+                                                  )),
+                                        );
+                                        print(newEmployee.englishName);
+                                        if (newEmployee != null) {
+                                          setState(() {
+                                            listViewItems[index] =
+                                                newEmployee;
+                                            print(listViewItems[index]
+                                                .arabicName);
+                                          });
+                                        }
+                                      },
+                                      child: Text(
+                                        "Edit",
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            color: Colors.white),
+                                      ),
+                                      color: Colors.lightBlue,
                                     ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey, width: 1),
-                                    ),
-                                  )),
-                                ]))
-                            .toList(),
+                                    FlatButton(
+                                      onPressed: () {
+                                        deleteEmployee(e.id);
+                                        setState(() {
+                                          listViewItems.remove(e);
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.delete_rounded,
+                                        color: Colors.white,
+                                      ),
+                                      color: Colors.red,
+                                    )
+                                  ],
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey, width: 1),
+                                ),
+                              )),
+                            ])
+                    )
+                    .
+                    toList
+                    (
+                    )
+                    ,
+                    );
+                  }
+                  }
                   ),
                 )
               ],

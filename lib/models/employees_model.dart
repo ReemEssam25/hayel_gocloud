@@ -104,14 +104,5 @@ class Employee {
     );
   }
 
-  /* factory users.fromJson(dynamic json) {
-    return users.withId(
-        json["id"] as String,
-        json["employeeName"] as String,
-        json["phoneNumber"] as String,
-        json["email"] as String,
-        json["name"] as String);
-  }
-}*/
 
 }
