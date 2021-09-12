@@ -26,7 +26,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
       context,
       listen: false,
     ).token;
-    var deleteStudent = await ApiServices.deleteEmployee(id, token);
+    var deleteStudent = await ApiServices.getinstance().deleteEmployee(id);
     deleteStudent == true
         ? null
         : Scaffold.of(context)

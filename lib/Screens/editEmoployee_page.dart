@@ -30,11 +30,11 @@ class _EditEmployeeState extends State<EditEmployee> {
   ApiServices api = ApiServices.getinstance();
 
   void saveEmployee() async {
-    String token = Provider.of<Auth>(
-      context,
-      listen: false,
-    ).token;
-    var saveResponce = await ApiServices.getinstance().postEmployee(widget.employee, token);
+    // String token = Provider.of<Auth>(
+    //   context,
+    //   listen: false,
+    // ).token;
+    var saveResponce = await ApiServices.getinstance().postEmployee(widget.employee);
 
     saveResponce == true
         ? Navigator.pop(context, widget.employee)
@@ -42,13 +42,13 @@ class _EditEmployeeState extends State<EditEmployee> {
   }
 
   void updateEmployee(Employee e) async {
-    String token = Provider.of<Auth>(
-      context,
-      listen: false,
-    ).token;
+    // String token = Provider.of<Auth>(
+    //   context,
+    //   listen: false,
+    // ).token;
 
     _futureEmployee =
-        (await ApiServices.getinstance().updateEmployee(e, token)) as Future<Employee>;
+        (await ApiServices.getinstance().updateEmployee(e)) as Future<Employee>;
 
     print(_futureEmployee.toString());
   }

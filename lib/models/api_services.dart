@@ -24,6 +24,7 @@ class ApiServices {
   Dio dio = new Dio();
 
   String token;
+
   void initdio() {
     dio.options.headers["Authorization"] = 'bearer $token';
   }
@@ -126,7 +127,7 @@ class ApiServices {
     //getDepartments();
   }
 
-  Future<bool> postEmployee(Employee employee, String token) async {
+  Future<bool> postEmployee(Employee employee) async {
     var myEmployee = employee.toMap();
     var employeeBody = convert.json.encode(myEmployee);
     var res = await http.post(Uri.parse(employeeUrl + "Insert"),
@@ -141,7 +142,7 @@ class ApiServices {
     return Future.value(res.statusCode == 200 ? true : false);
   }
 
-  Future<Employee> updateEmployee(Employee e, String token) async {
+  Future<Employee> updateEmployee(Employee e) async {
     var myEmployee = e.toMap();
     var employeeBody = convert.json.encode(myEmployee);
     final res = await http.put(Uri.parse(employeeUrl + "Update/"),
@@ -158,7 +159,7 @@ class ApiServices {
     }
   }
 
-  static Future<bool> deleteEmployee(int id, String token) async {
+  Future<bool> deleteEmployee(int id) async {
     var res = await http.delete(
       Uri.parse(employeeUrl + "Delete/" + id.toString()),
       headers: <String, String>{

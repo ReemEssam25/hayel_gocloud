@@ -13,8 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  var user = prefs.getString('username');
-  runApp(MyApp(myHome: user==null?LoginScreen():FirstPage(),));
+  String token = prefs.getString('token');
+  runApp(MyApp(myHome: token==null?LoginScreen():FirstPage(token: token,),));
 }
 
 class MyApp extends StatelessWidget {
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Color(0xFFEFEFF6),
             primarySwatch: Colors.lightGreen,
           ),
-          home: LoginScreen()),
+          home: myHome),
     );
   }
 }

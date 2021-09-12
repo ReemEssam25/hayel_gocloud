@@ -27,8 +27,14 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('invalid username or password')));
     else{
+      String token = Provider.of<Auth>(
+        context,
+        listen: false,
+      ).token;
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('username', _authData['username']);
+      prefs.setString('token', token);
+      //prefs.setString('username', _authData['username']);
     }
   }
 

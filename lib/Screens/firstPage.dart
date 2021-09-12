@@ -12,8 +12,9 @@ import 'department_Screen.dart';
 import 'home_page.dart';
 
 class FirstPage extends StatefulWidget {
-  FirstPage({Key key}) : super(key: key);
+  FirstPage({Key key, this.token}) : super(key: key);
 
+  String token;
   @override
   _FirstPageState createState() => _FirstPageState();
 }
@@ -26,16 +27,19 @@ class _FirstPageState extends State<FirstPage> {
     departmentScreen()
   ];
   int index;
-  String token;
   ApiServices api;
   @override
   void initState() {
     super.initState();
-    token = Provider.of<Auth>(
-      context,
-      listen: false,
-    ).token;
-    api = new ApiServices(token);
+    if (widget.token == null) {
+      widget.token = Provider
+          .of<Auth>(
+        context,
+        listen: false,
+      )
+          .token;
+    }
+    api = new ApiServices(widget.token);
     index = 0;
   }
 
